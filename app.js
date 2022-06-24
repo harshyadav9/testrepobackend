@@ -47,7 +47,7 @@ var mysql = require('mysql');
 
 //     });
 // });
-app.use(express.static(path.join(__dirname, "..", "testrepo", "build")));
+// app.use(express.static(path.join(__dirname, "..", "testrepo", "build")));
 app.use(express.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: false, limit: '50mb', parameterLimit: 70000 }));
 app.use(function (req, res, next) {
