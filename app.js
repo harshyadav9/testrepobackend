@@ -26,26 +26,26 @@ con.connect(function (err) {
     if (err) throw err;
     // if connection is successful
     console.log('connection successful');
-    var showtable = "SHOW TABLES LIKE 'customers'";
-    var createTable = "CREATE TABLE customers (name VARCHAR(255), address VARCHAR(255))";
-    var insertTable = "INSERT INTO customers (name, address) VALUES ('Company Inc', 'Highway 37')";
-    con.query(showtable, function (err, result) {
-        if (err) throw err;
-        if (result.length === 0) {
-            con.query(createTable, function (err1, result1) {
-                if (err1) throw err1;
-                console.log(result1);
-                console.log("Table created");
-            });
-        } else {
-            con.query(insertTable, function (err2, result2) {
-                if (err2) throw err2;
-                console.log(result2);
-                console.log("Record created");
-            });
-        }
+    // var showtable = "SHOW TABLES LIKE 'customers'";
+    // var createTable = "CREATE TABLE customers (name VARCHAR(255), address VARCHAR(255))";
+    // var insertTable = "INSERT INTO customers (name, address) VALUES ('Company Inc', 'Highway 37')";
+    // con.query(showtable, function (err, result) {
+    //     if (err) throw err;
+    //     if (result.length === 0) {
+    //         con.query(createTable, function (err1, result1) {
+    //             if (err1) throw err1;
+    //             console.log(result1);
+    //             console.log("Table created");
+    //         });
+    //     } else {
+    //         con.query(insertTable, function (err2, result2) {
+    //             if (err2) throw err2;
+    //             console.log(result2);
+    //             console.log("Record created");
+    //         });
+    //     }
 
-    });
+    // });
 });
 // app.use(express.static(path.join(__dirname, "..", "testrepo", "build")));
 app.use(express.json({ limit: "50mb" }));
