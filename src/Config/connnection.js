@@ -5,7 +5,8 @@ var connection = mysql.createConnection({
   host: "teridb.ctgy1xlcobou.ap-south-1.rds.amazonaws.com", // ip address of server running mysql
   user: "admin", // user name to your mysql database
   password: "Sathya12345", // corresponding password
-  port: "3306"
+  port: "3306",
+  database: "shooolnyt"
 });
 
 
@@ -20,6 +21,8 @@ connection.connect(function (err) {
   if (err) {
     console.log('errr', err)
   }
+
+  console.log("connected");
 })
 
 module.exports = connection;
