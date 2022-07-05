@@ -15,7 +15,7 @@ app.use(function (req, res, next) {
 	next();
 });
 app.use('/api', apis);
-app.use('/users', UserRoute)
+// app.use('/users', UserRoute)
 app.get('/', (req, res) => {
 	res.json({ status: 'Test api on ' })
 })
