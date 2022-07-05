@@ -10,6 +10,10 @@ app.use(function (req, res, next) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	next()
 })
+app.use(function (req, res, next) {
+	res.setHeader("Content-Type", "application/json");
+	next();
+});
 app.use('/api', apis);
 app.use('/users', UserRoute)
 app.get('/', (req, res) => {
