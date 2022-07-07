@@ -39,5 +39,5 @@ const upload = multer({
 
 const uploadDB = upload.single('studant')
 module.exports = {
-    uploadDB
+	uploadDB
 }
