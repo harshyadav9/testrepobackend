@@ -4,7 +4,7 @@ const router = express.Router();
 const Static = require('../Controller/Static')
 const StudantController = require('../Controller/StudantController')
 const FileController = require('../Controller/FileController')
-
+const SlotController = require('../Controller/SlotController')
 const User = require('../Controller/User')
 
 
@@ -20,10 +20,27 @@ router.post('/upload/:id', StudantController.uploadStudantRecord);
 router.post('/get-studant', StudantController.getStudantData);
 
 // 
-router.post('/user-list', User.getAllUser)
+router.post('/user-list', User.getAllUser);
 router.post('/login', User.login);
 router.post('/new-user', User.register);
 router.post('/update-info', User.upDateSchool);
+
+router.get('/payment', User.payment);
+router.post('/response', User.response);
+
+
+router.post('/getpaymentdetails', StudantController.getpaymentdetails);
+router.post('/update-payment', StudantController.updatePaymentStatus);
+router.post('/update-studant-slot', StudantController.upadateStudantTableSlots);
+router.post('/get-slot', SlotController.getSlots);
+router.post('/update-slot', SlotController.updateSlot);
+
+
+router.post('/paymentResponse', User.paymentResponse);
+
+
+
+
 
 // 
 router.get('/', (req, res, next) => {
