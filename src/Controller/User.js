@@ -386,5 +386,6 @@ module.exports = {
 	register,
 	upDateSchool,
 	payment,
-	response
+	response,
+	paymentResponse
 }
