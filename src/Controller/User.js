@@ -36,13 +36,18 @@ const register = async (req, res, next) => {
 		stateCityCode,
 		countryCode
 	} = req.body;
-	sqlQuery = `SELECT COUNT(*) AS totalRows FROM Schools`
+	sqlQuery = `SELECT COUNT(*) AS totalRows FROM Schools where country = '${country}' and state='${state}'`;
 	let totalrows = 0;
 	connection.query(sqlQuery, function (err, data) {
 		if (err) {
 			console.log("erro 00990", err)
 		}
+
+		console.log("sqlQuery", sqlQuery);
+
+
 		totalrows = Array.from(data)[0].totalRows;
+		console.log("totalrows", totalrows);
 		let uniqueSchoolCode = Utill.schoolCodeGen(isLocal, stateCityCode, totalrows, countryCode);
 		sqlQuery = `SELECT * FROM Schools WHERE schoolsCode='${schoolsCode}'`
 		connection.query(sqlQuery, function (error, result) {
@@ -214,7 +219,7 @@ const formvalue = (data) => {
 
 
 const response = (req, res, next) => {
-	console.log("req.body", req.body);
+	console.log("req.body>>>>>>>>", req.body);
 }
 
 const payment = async (req, res, next) => {
