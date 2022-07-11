@@ -5,7 +5,7 @@ var connection = mysql.createPool({
   connectionLimit: 100,
   host: "teridb.ctgy1xlcobou.ap-south-1.rds.amazonaws.com", // ip address of server running mysql
   user: "admin", // user name to your mysql database
-  password: "Sathya12345", // corresponding password
+  password: "Sathya098765", // corresponding password
   port: "3306",
   database: "shooolnyt"
 });
