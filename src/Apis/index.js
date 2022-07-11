@@ -25,8 +25,8 @@ router.post('/login', User.login);
 router.post('/new-user', User.register);
 router.post('/update-info', User.upDateSchool);
 
-router.get('/payment', User.payment);
-router.post('/response', User.response);
+router.post('/payment', User.payment);
+// router.post('/response', User.response);
 
 
 router.post('/getpaymentdetails', StudantController.getpaymentdetails);
@@ -34,9 +34,16 @@ router.post('/update-payment', StudantController.updatePaymentStatus);
 router.post('/update-studant-slot', StudantController.upadateStudantTableSlots);
 router.post('/get-slot', SlotController.getSlots);
 router.post('/update-slot', SlotController.updateSlot);
+router.post('/responsepage', User.responsepage);
+
+// router.post('/response', User.response);
+
+router.post('/isSlottingAllowed', StudantController.isSlottingAllowed);
 
 
-router.post('/paymentResponse', User.paymentResponse);
+// router.post('/response', User.response);
+
+router.post('/applicationStatus', User.applicationStatus);
 
 
 

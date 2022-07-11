@@ -442,10 +442,46 @@ const upadateStudantTableSlots = (req, res, next) => {
 	})
 }
 
+
+const isSlottingAllowed = (req, res, next) => {
+	console.log("req.body.schoolCode", req.body.schoolCode)
+	var sqlQuery = `SELECT count(*) as count FROM shooolnyt.InternationalStudants where SchoolID='${req.body.schoolCode}' and paymentStatus = 0`;
+	connection.query(sqlQuery, async function (err, result) {
+		if (err) {
+			console.log('Error', err);
+
+			return res.json({
+				status: false,
+				message: "please try again!"
+			})
+
+		} else {
+			console.log("result", Array.from(result)[0]);
+			let count = Array.from(result)[0];
+			if (count.count > 0) {
+				return res.json({
+					data: { isSlottingAllowed: false },
+					status: true,
+					message: "You have not done your payment slots cannot be alloted to you. Kindly do the payment firstly "
+				});
+			} else {
+				return res.json({
+					data: { isSlottingAllowed: true },
+					status: true,
+					message: ""
+				});
+			}
+
+		}
+
+	});
+}
+
 module.exports = {
 	uploadStudantRecord,
 	getStudantData,
 	updatePaymentStatus,
 	upadateStudantTableSlots,
-	getpaymentdetails
+	getpaymentdetails,
+	isSlottingAllowed
 }
