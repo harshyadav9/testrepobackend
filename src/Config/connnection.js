@@ -2,7 +2,7 @@ var mysql = require('mysql');
 
 
 var connection = mysql.createPool({
-  connectionLimit: 1000,
+  connectionLimit: 100,
   host: "teridb.ctgy1xlcobou.ap-south-1.rds.amazonaws.com", // ip address of server running mysql
   user: "admin", // user name to your mysql database
   password: "Sathya098765", // corresponding password
@@ -26,7 +26,13 @@ connection.getConnection(function (err) {
   }
 
   console.log("connected");
-})
+});
+
+connection.end(function (err) {
+  if (err) {
+    console.log("connection closing error", err.message);
+  }
+});
 
 module.exports = connection;
 
