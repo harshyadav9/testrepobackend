@@ -544,7 +544,7 @@ const payment = async (req, res, next) => {
 
 	const { amount, email, phone, name, productinfo } = req.body;
 	let randomval = randomize("0", 5);
-	// data['key'] = '63XJAXM4WO';
+	data['key'] = '63XJAXM4WO';
 	data['txnid'] = `GOTERI2022_${randomval}`
 	// data['amount'] = `${amount}.0`;
 	data['amount'] = `1.0`;
@@ -620,14 +620,14 @@ const pay = (access_key, url_main, res, request_payment_data) => {
 const generateHash = (data) => {
 
 	// for testing 
-	// var hashstring = '2PBP7IABZ2' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
-	// 	"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
-	// hashstring += "|" + 'DAH88E3UWQ';
-
-	// for production
 	var hashstring = '63XJAXM4WO' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
 		"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
 	hashstring += "|" + 'AP6GFPDU0T';
+
+	// for production
+	// var hashstring = '63XJAXM4WO' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
+	// 	"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
+	// hashstring += "|" + 'AP6GFPDU0T';
 
 	console.log("hashstring", hashstring);
 	data.hash = sha512.sha512(hashstring);
