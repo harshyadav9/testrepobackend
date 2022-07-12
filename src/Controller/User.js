@@ -586,6 +586,8 @@ const payment = async (req, res, next) => {
 		utilPayment.call(call_url, formvalue(data)).then(function (response) {
 			console.log("response", response);
 			pay(response.data, payment_url, res, data, 'success');
+		}).catch(error => {
+			console.log("error", error);
 		});
 	}
 
