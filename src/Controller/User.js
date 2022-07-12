@@ -431,19 +431,19 @@ const responsepage = async (req, res, next) => {
 const updatePayments = (req, res) => {
 
 	sqlQuery = `update PaymentDetail set PaymentID = '${req.body.easepayid}',PaymentReceivedStatus = 'success' where OrderId = '${req.body.txnid}'`;
-	console.log("sqlQuery", sqlQuery);
+	// console.log("sqlQuery", sqlQuery);
 	connection.query(sqlQuery, function (error, result) {
 
-		console.log("result", result);
+		// console.log("result", result);
 		if (error) {
-			console.log("error", error)
+			console.log("error", error);
 			return res.status(500).json({ status: false, message: "update in payment table not happened!" });
 		}
 
 		let paymentstatusupdatequery = `update InternationalStudants set paymentStatus = 1 where SchoolID = '${req.body.productinfo}' and paymentStatus = 0`;
 
 		connection.query(paymentstatusupdatequery, function (error, updatedresult) {
-			console.log("updatedresult", updatedresult);
+			// console.log("updatedresult", updatedresult);
 			if (error) {
 				console.log("error", error)
 				return res.status(500).json({ status: false, message: "update in student international table not happened!" });
@@ -554,8 +554,8 @@ const payment = async (req, res, next) => {
 	let randomval = randomize("0", 5);
 	data['key'] = '63XJAXM4WO';
 	data['txnid'] = `GOTERI2022_${randomval}`
-	// data['amount'] = `${amount}.0`;
-	data['amount'] = `1.0`;
+	data['amount'] = `${amount}.0`;
+	// data['amount'] = `1.0`;
 	data['email'] = `${email}`;
 	data['phone'] = `${phone}`;
 	data['name'] = `${name}`;
@@ -649,21 +649,24 @@ const upDateSchool = async (req, res, next) => {
 		district,
 		coordinatingteacher,
 		phoneStd,
-		code
+		code,
+		email_coordinator,
+		mobile_coordinator
 	} = req.body;
 	if (!(code)) {
 		res.status(400).json({ message: "Bad credentails", status: false })
 	} else {
 		sqlQuery = `
 		UPDATE Schools
-		SET coordinating_teacher = '${coordinatingteacher}', PostalAddress= '${postaladdress}', district='${district}',PhoneStd='${phoneStd}'
+		SET coordinating_teacher = '${coordinatingteacher}', PostalAddress= '${postaladdress}', district='${district}',PhoneStd='${phoneStd}',
+		email_coordinator = '${email_coordinator}',mobile_coordinator = '${mobile_coordinator}'
 		WHERE schoolsCode = '${code}';`
 		connection.query(sqlQuery, function (error, response) {
 			if (error) {
 				console.log("error", error)
-				res.status(500).json({ status: false, message: "Please try again1" })
+				return res.status(500).json({ status: false, message: "Please try again1" })
 			} else {
-				res.status(200).json({ status: true, message: "User information updated!" })
+				return res.status(200).json({ status: true, message: "User information updated!" })
 			}
 		})
 	}
@@ -671,19 +674,22 @@ const upDateSchool = async (req, res, next) => {
 
 }
 
-const login = (req, res, next) => {
-	console.log("login ....")
+const login = async (req, res, next) => {
+	console.log("login ....");
+	// let conn = await connection.getConnection();
+
 	const { username, password } = req.body;
-	connection.on('error', function (err) {
-		console.log("[mysql error]", err);
-	})
+	// connection.on('error', function (err) {
+	// 	console.log("[mysql error]", err);
+	// })
 	if (typeof username !== 'undefined' && typeof password !== 'undefined' && username !== "" && password !== "") {
 		let sqlQuery = '';
 		sqlQuery = `SELECT COUNT(schoolname) AS count FROM Schools WHERE schoolsCode = "${username}" AND password = "${password}" LIMIT 0, 1;`
 		connection.query(sqlQuery, function (err, result) {
 			if (err) {
 				console.log('error', err);
-				res.json({
+				connection.end();
+				return res.json({
 					status: false,
 					message: "Please try again!"
 				})
@@ -692,13 +698,20 @@ const login = (req, res, next) => {
 					sqlQuery = `SELECT * FROM Schools WHERE schoolsCode = "${username}" AND password = "${password}"`
 					connection.query(sqlQuery, function (err, result) {
 						if (err) {
+							connection.end();
+							return res.status(400).json({
+								message: "Bad request!",
+								status: true
+							});
 
 						} else {
+
 
 							let finalresult = Array.from(result)[0];
 							console.log("finalresult", finalresult);
 							delete finalresult['password'];
 							// finalresult.splice(finalresult.indexof('password'), 1);
+							connection.end();
 							return res.json({
 								data: finalresult,
 								status: true,
@@ -721,14 +734,16 @@ const login = (req, res, next) => {
 					})
 
 				} else {
-					res.json({
+					connection.end();
+					return res.json({
 						message: "Bad credentails!"
 					})
 				}
 			}
 		})
 	} else {
-		res.status(400).json({
+		connection.end();
+		return res.status(400).json({
 			message: "Bad request!",
 			status: true
 		})
