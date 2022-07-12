@@ -685,64 +685,69 @@ const login = async (req, res, next) => {
 	if (typeof username !== 'undefined' && typeof password !== 'undefined' && username !== "" && password !== "") {
 		let sqlQuery = '';
 		sqlQuery = `SELECT COUNT(schoolname) AS count FROM Schools WHERE schoolsCode = "${username}" AND password = "${password}" LIMIT 0, 1;`
-		connection.query(sqlQuery, function (err, result) {
-			if (err) {
-				console.log('error', err);
-				connection.end();
-				return res.json({
-					status: false,
-					message: "Please try again!"
-				})
-			} else {
-				if (Array.from(result).length > 0 && Array.from(result)[0].count === 1) {
-					sqlQuery = `SELECT * FROM Schools WHERE schoolsCode = "${username}" AND password = "${password}"`
-					connection.query(sqlQuery, function (err, result) {
-						if (err) {
-							connection.end();
-							return res.status(400).json({
-								message: "Bad request!",
-								status: true
-							});
 
-						} else {
+		connection.getConnection(function (err, connectionval) {
 
-
-							let finalresult = Array.from(result)[0];
-							console.log("finalresult", finalresult);
-							delete finalresult['password'];
-							// finalresult.splice(finalresult.indexof('password'), 1);
-							connection.end();
-							return res.json({
-								data: finalresult,
-								status: true,
-								message: "data fetched successfully!"
-							})
-							// console.log("====result", result)
-							// const user = Array.from(result)[0];
-							// delete user.password;
-							// const token = jwt.sign({
-							// 	...user
-							// }, 'ALPHA90009', { expiresIn: "2h" });
-
-							// res.json({
-							// 	data: user,
-							// 	status: true,
-							// 	token: token,
-							// 	message: "Login successfully!"
-							// })
-						}
-					})
-
-				} else {
-					connection.end();
+			connectionval.query(sqlQuery, function (err, result) {
+				if (err) {
+					console.log('error', err);
+					connectionval.release();
 					return res.json({
-						message: "Bad credentails!"
+						status: false,
+						message: "Please try again!"
 					})
+				} else {
+					if (Array.from(result).length > 0 && Array.from(result)[0].count === 1) {
+						sqlQuery = `SELECT * FROM Schools WHERE schoolsCode = "${username}" AND password = "${password}"`
+						connectionval.query(sqlQuery, function (err, result) {
+							if (err) {
+								connectionval.release();
+								return res.status(400).json({
+									message: "Bad request!",
+									status: true
+								});
+
+							} else {
+
+
+								let finalresult = Array.from(result)[0];
+								console.log("finalresult", finalresult);
+								delete finalresult['password'];
+								// finalresult.splice(finalresult.indexof('password'), 1);
+								connectionval.release();
+								return res.json({
+									data: finalresult,
+									status: true,
+									message: "data fetched successfully!"
+								})
+								// console.log("====result", result)
+								// const user = Array.from(result)[0];
+								// delete user.password;
+								// const token = jwt.sign({
+								// 	...user
+								// }, 'ALPHA90009', { expiresIn: "2h" });
+
+								// res.json({
+								// 	data: user,
+								// 	status: true,
+								// 	token: token,
+								// 	message: "Login successfully!"
+								// })
+							}
+						})
+
+					} else {
+						connectionval.release();
+						return res.json({
+							message: "Bad credentails!"
+						})
+					}
 				}
-			}
+			})
 		})
+
 	} else {
-		connection.end();
+		// connection.end();
 		return res.status(400).json({
 			message: "Bad request!",
 			status: true
