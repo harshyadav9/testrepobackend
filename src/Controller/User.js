@@ -270,7 +270,7 @@ const responsepage = async (req, res, next) => {
 	// console.log("req", req);
 	function checkReverseHash(response) {
 		console.log("response", response)
-		var hashstring = '63XJAXM4WO' + + "|" + response.udf10 + "|" + response.udf9 + "|" + response.udf8 + "|" + response.udf7 +
+		var hashstring = '63XJAXM4WO' + "|" + response.udf10 + "|" + response.udf9 + "|" + response.udf8 + "|" + response.udf7 +
 			"|" + response.udf6 + "|" + response.udf5 + "|" + response.udf4 + "|" + response.udf3 + "|" + response.udf2 + "|" + response.udf1 + "|" +
 			response.email + "|" + response.firstname + "|" + response.productinfo + "|" + response.amount + "|" + response.txnid + "|" + 'AP6GFPDU0T';
 		hash_key = sha512.sha512(hashstring);
