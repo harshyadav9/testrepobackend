@@ -691,7 +691,6 @@ const login = (req, res, next) => {
 							console.log("finalresult", finalresult);
 							delete finalresult['password'];
 							// finalresult.splice(finalresult.indexof('password'), 1);
-							connection.release();
 							return res.json({
 								data: finalresult,
 								status: true,
@@ -714,7 +713,6 @@ const login = (req, res, next) => {
 					})
 
 				} else {
-					connection.release();
 					res.json({
 						message: "Bad credentails!"
 					})
@@ -722,7 +720,6 @@ const login = (req, res, next) => {
 			}
 		})
 	} else {
-		connection.release();
 		res.status(400).json({
 			message: "Bad request!",
 			status: true
