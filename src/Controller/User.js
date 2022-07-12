@@ -544,7 +544,7 @@ const payment = async (req, res, next) => {
 
 	const { amount, email, phone, name, productinfo } = req.body;
 	let randomval = randomize("0", 5);
-	data['key'] = '63XJAXM4WO';
+	// data['key'] = '63XJAXM4WO';
 	data['txnid'] = `GOTERI2022_${randomval}`
 	// data['amount'] = `${amount}.0`;
 	data['amount'] = `1.0`;
@@ -578,8 +578,8 @@ const payment = async (req, res, next) => {
 			data: validationres
 		})
 	} else {
-		data = generateHash(data);
-		// data['hash_key'] = hash_key;
+		hash_key = generateHash(data);
+		data['hash_key'] = hash_key;
 		console.log("data in form", data);
 		// payment_url = 'https://testpay.easebuzz.in/';  // TESTING
 		payment_url = 'https://pay.easebuzz.in/';
@@ -631,7 +631,7 @@ const generateHash = (data) => {
 
 	console.log("hashstring", hashstring);
 	data.hash = sha512.sha512(hashstring);
-	return (data);
+	return (data.hash);
 }
 
 const upDateSchool = async (req, res, next) => {
