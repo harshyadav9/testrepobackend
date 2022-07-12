@@ -20,19 +20,13 @@ var connection = mysql.createPool({
 connection.getConnection(function (err) {
   // body...
   if (err) {
-    // connection.release();
+    connection.release();
     console.log(' Error getting mysql_pool connection: ' + err);
     throw err;
   }
 
   console.log("connected");
-});
-
-connection.end(function (err) {
-  if (err) {
-    console.log("connection closing error", err.message);
-  }
-});
+})
 
 module.exports = connection;
 
