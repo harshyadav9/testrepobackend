@@ -622,9 +622,9 @@ const generateHash = (data) => {
 	// hashstring += "|" + 'DAH88E3UWQ';
 
 	// for production
-	var hashstring = '63XJAXM4W0' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
+	var hashstring = '63XJAXM4WO' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
 		"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
-	hashstring += "|" + 'AP6GFPDUOT';
+	hashstring += "|" + 'AP6GFPDU0T';
 	data.hash = sha512.sha512(hashstring);
 	return (data.hash);
 }
