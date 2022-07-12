@@ -45,6 +45,7 @@ router.post('/isSlottingAllowed', StudantController.isSlottingAllowed);
 
 router.post('/applicationStatus', User.applicationStatus);
 
+router.post('/ispaymentallowed', StudantController.ispaymentallowed);
 
 
 

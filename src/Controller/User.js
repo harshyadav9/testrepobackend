@@ -280,9 +280,140 @@ const responsepage = async (req, res, next) => {
 			return false;
 	}
 	if (checkReverseHash(req.body)) {
-		return res.send(req.body);
+
+		var html = `<html><body>
+		<div style="width:100%;height:40px;background: #f0f2f3;border-bottom: 1px solid #dee1e3;
+		box-shadow: rgb(0 0 0 / 93%) 32px 24px 107px 0px;background-color: rgb(172, 235, 141);font-weight: 500;font-size: 16px;    display: flex;
+		flex-direction: column;    border: 2px solid black;">
+			<p style="font-family: sans-serif;font-weight: bold;text-align: center;margin-bottom: 0;">Payment Response Page</p>
+			</div>
+			<h3 style="text-align:center;font-weight:bold;">Dont click back button. Kindly close the window.Otherwise you may losse data...</h3>
+			<h4 style="text-align:center;">TERI-TEAM</h4>
+			<div style="width: 600px;margin: 55px auto 0;padding: 75px 100px 20px 100px;position: relative;
+			border: 1px solid #e9e9e9;text-align: left;box-shadow: 2px 6px 0px 0px #ccc;border-radius: 5px;box-shadow: rgb(0 0 0 / 93%) 32px 24px 107px 0px;
+			background-color: rgb(172, 235, 141);">
+			<center>
+				<div>
+					<div style="display: flex;"><label><h2>Name:</h2></label></div>
+					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.firstname}</h3></div>
+				</div>
+			</center>
+
+			<center>
+
+				<div>
+					<div style="display: flex;"><label><h2>Amount:</h2></label></div>
+					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.amount}</h3></div>
+				</div>
+				
+			</center>
+
+			<center>
+
+			<div>
+					<div style="display: flex;"><label><h2>Order ID:</h2></label></div>
+					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.txnid}</h3></div>
+				</div>
+
+
+			<div>
+					<div style="display: flex;"><label><h2>Payment ID:</h2></label></div>
+					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.easepayid}</h3></div>
+				</div>
+
+			
+			</center>
+
+			<center>
+
+			<div>
+					<div style="display: flex;"><label><h2>Email:</h2></label></div>
+					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.email}</h3></div>
+				</div>
+
+
+			</center>
+
+		
+			
+			<center><h1 style="color=green">Your payment is successful.</h1></center>
+			<center><h4>Kindly close this window.</h4></center>
+			<div>
+		</div>
+		
+		</body></html>`
+		res.writeHead(200, { 'Content-type': 'text/html' });
+		res.write(html);
+		res.end();
+
+		// return res.send(req.body);
+	} else {
+		var html = `<html><body>
+		<div style="width:100%;height:40px;background: #f0f2f3;border-bottom: 1px solid #dee1e3;
+		box-shadow: rgb(0 0 0 / 93%) 32px 24px 107px 0px;background-color: rgb(172, 235, 141);font-weight: 500;font-size: 16px;    display: flex;
+		flex-direction: column;    border: 2px solid black;">
+			<p style="font-family: sans-serif;font-weight: bold;text-align: center;margin-bottom: 0;">Payment Response Page</p>
+			</div>
+			<h3 style="text-align:center;font-weight:bold;">Dont click back button. Kindly close the window.Otherwise you may losse data...</h3>
+			<h4 style="text-align:center;">TERI-TEAM</h4>
+			<div style="width: 600px;margin: 55px auto 0;padding: 75px 100px 20px 100px;position: relative;
+			border: 1px solid #e9e9e9;text-align: left;box-shadow: 2px 6px 0px 0px #ccc;border-radius: 5px;box-shadow: rgb(0 0 0 / 93%) 32px 24px 107px 0px;
+			background-color: rgb(172, 235, 141);">
+			<center>
+				<div>
+					<div style="display: flex;"><label><h2>Name:</h2></label></div>
+					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.firstname}</h3></div>
+				</div>
+			</center>
+
+			<center>
+
+				<div>
+					<div style="display: flex;"><label><h2>Amount:</h2></label></div>
+					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.amount}</h3></div>
+				</div>
+				
+			</center>
+
+			<center>
+
+			<div>
+					<div style="display: flex;"><label><h2>Order ID:</h2></label></div>
+					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.txnid}</h3></div>
+				</div>
+
+
+			<div>
+					<div style="display: flex;"><label><h2>Payment ID:</h2></label></div>
+					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.easepayid}</h3></div>
+				</div>
+
+			
+			</center>
+
+			<center>
+
+			<div>
+					<div style="display: flex;"><label><h2>Email:</h2></label></div>
+					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.email}</h3></div>
+				</div>
+
+
+			</center>
+
+		
+			
+			<center><h1 style="color=green">Your payment is awaiting for approval.Please contact helpdesk</h1></center>
+			<center><h4>Kindly close this window.</h4></center>
+			<div>
+		</div>
+		
+		</body></html>`;
+		res.writeHead(200, { 'Content-type': 'text/html' });
+		res.write(html);
+		res.end();
 	}
-	return res.send('false, check the hash value ');
+
 };
 
 
@@ -293,11 +424,11 @@ const responsepage = async (req, res, next) => {
 const applicationStatus = async (req, res, next) => {
 
 	let { school_code } = req.body;
-	sqlQuery = `SELECT ins.Name,ins.DOB,ins.Class,ins.Section,ins.ExamTheme,ins.DemoExam,f.Fee,ins.ExamSlotDateTime,ins.Rollno,ins.PaymentStatus
+	sqlQuery = `SELECT ins.Name,ins.DOB,ins.Class,ins.Section,ins.ExamTheme,ins.DemoExam,f.Fee,ins.ExamSlotDateTime,ins.DemoSlotDateTime,ins.Rollno,ins.PaymentStatus
 	FROM InternationalStudants ins
 	JOIN FeeIN f on 
 	f.ExamMode = ins.ExamTheme
-	WHERE SchoolID='${school_code}' AND SubscriberType ='SCHL'`;
+	WHERE SchoolID='${school_code}' AND SubscriberType ='SCHL' order by ins.name`;
 	connection.query(sqlQuery, function (error, result) {
 		if (error) {
 			console.log("error", error)
@@ -317,7 +448,7 @@ const payment = async (req, res, next) => {
 
 	const { amount, email, phone, name, productinfo } = req.body;
 	let randomval = randomize("0", 5);
-	data['txnid'] = `ab${randomval}`
+	data['txnid'] = `GOTERI2022_${randomval}`
 	data['amount'] = `${amount}.0`;
 	data['email'] = `${email}`;
 	data['phone'] = `${phone}`;
