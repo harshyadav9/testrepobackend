@@ -197,7 +197,7 @@ const checkArgumentValidation = (data, res) => {
 
 const formvalue = (data) => {
 	let form = {
-		'key': '2PBP7IABZ2',
+		'key': '63XJAXM4WO',
 		'txnid': data.txnid,
 		'amount': data.amount,
 		'email': data.email,
