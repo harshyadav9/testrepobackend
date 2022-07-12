@@ -58,14 +58,19 @@ const register = async (req, res, next) => {
 			} else if (Array.from(result).length === 0) {
 				let pass = Utill.generatePassword();
 				sqlQuery = `INSERT INTO Schools (schoolsCode, principalname, schoolname, country, state, pincode, mobile, email, ismobileVerified, isEmailVerified,password) 
-			VALUES ("${uniqueSchoolCode}", "${principalname}", "${schoolname}","${country}", "${state}", "${pincode}", "${mobile}", "${email}", ${ismobileVerified}, ${isEmailVerified},"${pass}")`
+			VALUES ("${uniqueSchoolCode}", "${principalname}", "${schoolname}","${country}", "${state}", "${pincode}", "${mobile}", "${email}", ${ismobileVerified}, ${isEmailVerified},"${mobile}")`
 				connection.query(sqlQuery, function (error, response) {
 					console.log("error", error)
 					if (error) {
-						return res.status(500).json({ status: false, message: "Please try again1" })
+						return res.status(500).json({ status: false, message: "Please try again1" });
 					} else {
-						// sendEmail(principalname, email, { schoolCode: uniqueSchoolCode, pass: pass })
-						return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
+						sendEmail(principalname, email, { schoolCode: uniqueSchoolCode, pass: mobile }).then(data => {
+							return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
+						}).catch(error => {
+							console.log("error", error);
+							return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
+						});
+						// return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
 					}
 				})
 			} else {
