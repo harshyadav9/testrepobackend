@@ -270,10 +270,17 @@ const responsepage = async (req, res, next) => {
 	// console.log("req", req);
 	function checkReverseHash(response) {
 		console.log("response", response)
-		var hashstring = '63XJAXM4WO' + "|" + response.status + "|" + response.udf10 + "|" + response.udf9 + "|" + response.udf8 + "|" + response.udf7 +
+		var hashstring = '63XJAXM4WO' + + "|" + response.udf10 + "|" + response.udf9 + "|" + response.udf8 + "|" + response.udf7 +
 			"|" + response.udf6 + "|" + response.udf5 + "|" + response.udf4 + "|" + response.udf3 + "|" + response.udf2 + "|" + response.udf1 + "|" +
 			response.email + "|" + response.firstname + "|" + response.productinfo + "|" + response.amount + "|" + response.txnid + "|" + 'AP6GFPDU0T';
 		hash_key = sha512.sha512(hashstring);
+
+		// 	var hashstring = '63XJAXM4WO' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
+		// 	"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
+		// hashstring += "|" + 'AP6GFPDU0T';
+
+
+
 		console.log("hash on clinet compae ", hash_key);
 		if (hash_key == req.body.hash)
 			return true;
