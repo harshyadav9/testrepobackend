@@ -579,7 +579,7 @@ const payment = async (req, res, next) => {
 		})
 	} else {
 		var hash_key = generateHash(data);
-		data['hash'] = hash_key;
+		data['hash_key'] = hash_key;
 		console.log("data in form", data);
 		// payment_url = 'https://testpay.easebuzz.in/';  // TESTING
 		payment_url = 'https://pay.easebuzz.in/';
