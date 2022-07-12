@@ -56,7 +56,7 @@ const register = async (req, res, next) => {
 
 				res.status(500).json({ status: false, message: "Please try again!" })
 			} else if (Array.from(result).length === 0) {
-				let pass = Utill.generatePassword()
+				let pass = Utill.generatePassword();
 				sqlQuery = `INSERT INTO Schools (schoolsCode, principalname, schoolname, country, state, pincode, mobile, email, ismobileVerified, isEmailVerified,password) 
 			VALUES ("${uniqueSchoolCode}", "${principalname}", "${schoolname}","${country}", "${state}", "${pincode}", "${mobile}", "${email}", ${ismobileVerified}, ${isEmailVerified},"${pass}")`
 				connection.query(sqlQuery, function (error, response) {
@@ -661,14 +661,28 @@ const upDateSchool = async (req, res, next) => {
 		SET coordinating_teacher = '${coordinatingteacher}', PostalAddress= '${postaladdress}', district='${district}',PhoneStd='${phoneStd}',
 		email_coordinator = '${email_coordinator}',mobile_coordinator = '${mobile_coordinator}'
 		WHERE schoolsCode = '${code}';`
-		connection.query(sqlQuery, function (error, response) {
-			if (error) {
-				console.log("error", error)
-				return res.status(500).json({ status: false, message: "Please try again1" })
-			} else {
-				return res.status(200).json({ status: true, message: "User information updated!" })
+		connection.getConnection(function (err, connectionval) {
+			if (err) {
+				console.log('query connec error!', err);
+				connectionval.release();
+				return res.json({
+					status: false,
+					message: "There is issue in connection in mysql"
+				});
 			}
-		})
+
+			connectionval.query(sqlQuery, function (error, response) {
+				if (error) {
+					console.log("error", error);
+					connectionval.release();
+					return res.status(500).json({ status: false, message: "Please try again1" })
+				} else {
+					connectionval.release();
+					return res.status(200).json({ status: true, message: "User information updated!" })
+				}
+			})
+		});
+
 	}
 
 
@@ -687,6 +701,14 @@ const login = async (req, res, next) => {
 		sqlQuery = `SELECT COUNT(schoolname) AS count FROM Schools WHERE schoolsCode = "${username}" AND password = "${password}" LIMIT 0, 1;`
 
 		connection.getConnection(function (err, connectionval) {
+			if (err) {
+				console.log('query connec error!', err);
+				connectionval.release();
+				return res.json({
+					status: false,
+					message: "There is issue in connection in mysql"
+				});
+			}
 
 			connectionval.query(sqlQuery, function (err, result) {
 				if (err) {
