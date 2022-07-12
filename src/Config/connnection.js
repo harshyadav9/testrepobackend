@@ -2,7 +2,7 @@ var mysql = require('mysql');
 
 
 var connection = mysql.createPool({
-  connectionLimit: 100,
+  connectionLimit: 99,
   host: "teridb.ctgy1xlcobou.ap-south-1.rds.amazonaws.com", // ip address of server running mysql
   user: "admin", // user name to your mysql database
   password: "Sathya098765", // corresponding password
@@ -20,7 +20,7 @@ var connection = mysql.createPool({
 connection.getConnection(function (err) {
   // body...
   if (err) {
-    connection.release();
+    // connection.release();
     console.log(' Error getting mysql_pool connection: ' + err);
     throw err;
   }
