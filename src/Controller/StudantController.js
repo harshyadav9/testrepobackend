@@ -9,38 +9,54 @@ const { updateSlot } = require('./SlotController');
 
 
 const getpaymentdetails = (req, res, next) => {
-	const { school_code } = req.body;
-	console.log("school_code", school_code);
-	sqlQuery = `SELECT * FROM InternationalStudants where SchoolID="${school_code}"`;
-	// let totalrows = 0;
-	connection.query(sqlQuery, function (err, data) {
+	connection.getConnection(function (err, connectionval) {
 		if (err) {
-			console.log("erro 00990", err);
-			res.status(500).json({ message: 'please try again ', status: false })
+			console.log('query connec error!', err);
+			connectionval.release();
+			return res.json({
+				status: false,
+				message: "There is issue in connection in mysql"
+			});
 		}
 
-		console.log("data", Array.from(data));
-		// totalrows = Array.from(data)[0].totalRows;
+		const { school_code } = req.body;
+		console.log("school_code", school_code);
+		sqlQuery = `SELECT * FROM InternationalStudants where SchoolID="${school_code}"`;
+		// let totalrows = 0;
+		connectionval.query(sqlQuery, function (err, data) {
+			if (err) {
+				console.log("erro 00990", err);
+				connectionval.release();
+				res.status(500).json({ message: 'please try again ', status: false })
+			}
 
-		let totalData = data;
+			console.log("data", Array.from(data));
+			// totalrows = Array.from(data)[0].totalRows;
+
+			let totalData = data;
 
 
-		// console.log("id>>>>", id);
-		// console.log("srollNumber>>>>", srollNumber);
-		// console.log("srollNumber>>>>", srollNumber);
-		let clientData = calculateSchoolStudentFee(totalData, school_code, res);
-		// let idArray = id.split('');
-		// let countryCode = idArray.slice(2).slice(0,2).join('');
-		// let citycode = idArray.slice(4).slice(0,2).join('');
+			// console.log("id>>>>", id);
+			// console.log("srollNumber>>>>", srollNumber);
+			// console.log("srollNumber>>>>", srollNumber);
+			let clientData = calculateSchoolStudentFee(totalData, school_code, res, connectionval);
+			// let idArray = id.split('');
+			// let countryCode = idArray.slice(2).slice(0,2).join('');
+			// let citycode = idArray.slice(4).slice(0,2).join('');
 
 
-	})
+		});
+	});
+
+
+
+
 
 	// calculateFee(data, 'GOAE030002', 'AE22030002')
 };
 
 
-const calculateSchoolStudentFee = async (data = [], id, res) => {
+const calculateSchoolStudentFee = async (data = [], id, res, connectionval) => {
 	let themeCollection = new Map([
 		['ESD', 0],
 		['ESDGREEN', 0]
@@ -84,10 +100,15 @@ const calculateSchoolStudentFee = async (data = [], id, res) => {
 	};
 
 	console.log("sql", sql)
-	connection.query(sql, (err, packet) => {
+	connectionval.query(sql, (err, packet) => {
 		if (err) {
-			console.log('issue', err)
-			return [];
+
+			connectionval.release();
+			return res.json({
+				message: 'calculation done!',
+				status: true,
+				data: []
+			});
 		} else {
 			console.log('packet', Array.from(packet));
 			let ESDFEE, ESDGREENFEE, MOCKFEE = 0
@@ -113,6 +134,7 @@ const calculateSchoolStudentFee = async (data = [], id, res) => {
 			}
 			);
 			console.log("priceCalculation", priceCalculation);
+			connectionval.release();
 			return res.json({
 				message: 'calculation done!',
 				status: true,
