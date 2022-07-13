@@ -5,6 +5,7 @@ const Static = require('../Controller/Static')
 const StudantController = require('../Controller/StudantController')
 const FileController = require('../Controller/FileController')
 const SlotController = require('../Controller/SlotController')
+const SmsController = require('../Controller/smsController')
 const User = require('../Controller/User')
 
 
@@ -48,6 +49,10 @@ router.post('/applicationStatus', User.applicationStatus);
 router.post('/ispaymentallowed', StudantController.ispaymentallowed);
 
 
+
+// router.get('/sms', SmsController.sendSmsToCandidate);
+
+router.post('/generateOtp', SmsController.generateOtp);
 
 
 // 
