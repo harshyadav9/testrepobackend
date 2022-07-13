@@ -559,8 +559,8 @@ const payment = async (req, res, next) => {
 	let randomval = randomize("0", 5);
 	data['key'] = '63XJAXM4WO';
 	data['txnid'] = `GOTERI2022_${randomval}`
-	data['amount'] = `${amount}.0`;
-	// data['amount'] = `1.0`;
+	// data['amount'] = `${amount}.0`;
+	data['amount'] = `1.0`;
 	data['email'] = `${email}`;
 	data['phone'] = `${phone}`;
 	data['name'] = `${name}`;
