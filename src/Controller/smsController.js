@@ -1,5 +1,6 @@
 var request = require('request');
 var randomize = require('randomatic');
+const { sendEmailotp } = require('../Utill/sendEmail');
 const sendSmsToCandidate = async (otp, mobile) => {
     console.log("candidate", otp, mobile);
     // return new Promise((resolve, reject) => {
@@ -34,24 +35,25 @@ UNICGO`;
 };
 
 
-const generateOtpEmail = async (req, res, next) => {
-    let { mobile } = req.body;
+const sendEmailToCandidate = async (req, res, next) => {
+    let { email } = req.query;
     let randomvalue = randomize("0", 4);
-    sendSmsToCandidate(randomvalue, mobile).then(() => {
-
+    sendEmailotp(randomvalue, email).then(data => {
         return res.json({
             status: true,
             otp: randomvalue
         });
     }).catch(error => {
-
+        console.log("error", error)
         return res.json({
-            status: true,
+            status: false,
             otp: randomvalue
         });
     });
+};
 
-}
+
+
 
 const generateOtp = async (req, res, next) => {
     let { mobile } = req.body;
@@ -65,7 +67,7 @@ const generateOtp = async (req, res, next) => {
     }).catch(error => {
 
         return res.json({
-            status: true,
+            status: false,
             otp: randomvalue
         });
     });
@@ -73,8 +75,10 @@ const generateOtp = async (req, res, next) => {
 }
 
 
+
+
 module.exports = {
     sendSmsToCandidate,
     generateOtp,
-    generateOtpEmail
+    sendEmailToCandidate
 }

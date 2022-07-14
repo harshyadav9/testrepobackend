@@ -81,48 +81,48 @@ const register = async (req, res, next) => {
 }
 
 
-const form = () => {
-	form = {
-		'key': config.key,
-		'txnid': 'T31QQWUQ',
-		'amount': '125.55',
-		'email': 'harshy110@gmail.com',
-		'phone': '0123456789',
-		'firstname': 'Harsh',
-		'udf1': data.udf1,
-		'udf2': data.udf2,
-		'udf3': data.udf3,
-		'udf4': data.udf4,
-		'udf5': data.udf5,
-		'hash': hash_key,
-		'productinfo': 'apple',
-		'udf6': data.udf6,
-		'udf7': data.udf7,
-		'udf8': data.udf8,
-		'udf9': data.udf9,
-		'udf10': data.udf10,
-		'furl': 'https://terigreenolympiad.com/paymentResponse', //'http://localhost:3000/response',
-		'surl': 'https://terigreenolympiad.com/paymentResponse', //'http://localhost:3000/response'
-	}
-	if (data.unique_id != '') {
-		form.unique_id = data.unique_id
-	}
+// const form = () => {
+// 	form = {
+// 		'key': config.key,
+// 		'txnid': 'T31QQWUQ',
+// 		'amount': '125.55',
+// 		'email': 'harshy110@gmail.com',
+// 		'phone': '0123456789',
+// 		'firstname': 'Harsh',
+// 		'udf1': data.udf1,
+// 		'udf2': data.udf2,
+// 		'udf3': data.udf3,
+// 		'udf4': data.udf4,
+// 		'udf5': data.udf5,
+// 		'hash': hash_key,
+// 		'productinfo': 'apple',
+// 		'udf6': data.udf6,
+// 		'udf7': data.udf7,
+// 		'udf8': data.udf8,
+// 		'udf9': data.udf9,
+// 		'udf10': data.udf10,
+// 		'furl': 'https://terigreenolympiad.com/paymentResponse', //'http://localhost:3000/response',
+// 		'surl': 'https://terigreenolympiad.com/paymentResponse', //'http://localhost:3000/response'
+// 	}
+// 	if (data.unique_id != '') {
+// 		form.unique_id = data.unique_id
+// 	}
 
 
-	if (data.split_payments != '') {
-		form.split_payments = data.split_payments
-	}
+// 	if (data.split_payments != '') {
+// 		form.split_payments = data.split_payments
+// 	}
 
-	if (data.sub_merchant_id != '') {
-		form.sub_merchant_id = data.sub_merchant_id
-	}
+// 	if (data.sub_merchant_id != '') {
+// 		form.sub_merchant_id = data.sub_merchant_id
+// 	}
 
-	if (data.customer_authentication_id != '') {
-		form.customer_authentication_id = data.customer_authentication_id
-	}
+// 	if (data.customer_authentication_id != '') {
+// 		form.customer_authentication_id = data.customer_authentication_id
+// 	}
 
-	return form;
-}
+// 	return form;
+// }
 
 
 // const responsepage = (req, res, next) => {
@@ -202,7 +202,12 @@ const checkArgumentValidation = (data, res) => {
 
 const formvalue = (data) => {
 	let form = {
-		'key': '63XJAXM4WO',
+
+
+
+
+		'key': '2PBP7IABZ2',   // test
+		// 'key': '63XJAXM4WO',   // production
 		'txnid': data.txnid,
 		'amount': data.amount,
 		'email': data.email,
@@ -275,14 +280,22 @@ const responsepage = async (req, res, next) => {
 	// console.log("req", req);
 	function checkReverseHash(response) {
 		console.log("response", response)
-		var hashstring = 'AP6GFPDU0T' + "|" + response.status + "|" + response.udf10 + "|" + response.udf9 + "|" + response.udf8 + "|" + response.udf7 +
+
+		//  production
+		// var hashstring = 'AP6GFPDU0T' + "|" + response.status + "|" + response.udf10 + "|" + response.udf9 + "|" + response.udf8 + "|" + response.udf7 +
+		// 	"|" + response.udf6 + "|" + response.udf5 + "|" + response.udf4 + "|" + response.udf3 + "|" + response.udf2 + "|" + response.udf1 + "|" +
+		// 	response.email + "|" + response.firstname + "|" + response.productinfo + "|" + response.amount + "|" + response.txnid + "|" + response.key;
+		// hash_key = sha512.sha512(hashstring);
+
+
+		//  test
+
+		var hashstring = 'DAH88E3UWQ' + "|" + response.status + "|" + response.udf10 + "|" + response.udf9 + "|" + response.udf8 + "|" + response.udf7 +
 			"|" + response.udf6 + "|" + response.udf5 + "|" + response.udf4 + "|" + response.udf3 + "|" + response.udf2 + "|" + response.udf1 + "|" +
 			response.email + "|" + response.firstname + "|" + response.productinfo + "|" + response.amount + "|" + response.txnid + "|" + response.key;
 		hash_key = sha512.sha512(hashstring);
 
-		// var hashstring = '63XJAXM4WO' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
-		// 	"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
-		// hashstring += "|" + 'AP6GFPDU0T';
+
 
 
 		console.log("hash on clinet compae ", hash_key);
@@ -435,6 +448,8 @@ const responsepage = async (req, res, next) => {
 
 const updatePayments = (req, res) => {
 
+
+	let paymentstatusupdatequery;
 	sqlQuery = `update PaymentDetail set PaymentID = '${req.body.easepayid}',PaymentReceivedStatus = 'success' where OrderId = '${req.body.txnid}'`;
 	// console.log("sqlQuery", sqlQuery);
 	connection.query(sqlQuery, function (error, result) {
@@ -445,7 +460,13 @@ const updatePayments = (req, res) => {
 			return res.status(500).json({ status: false, message: "update in payment table not happened!" });
 		}
 
-		let paymentstatusupdatequery = `update InternationalStudants set paymentStatus = 1 where SchoolID = '${req.body.productinfo}' and paymentStatus = 0`;
+		if (req.body.udf1 === 'INDV') {
+			paymentstatusupdatequery = `update IndividualStudent set paymentStatus = 1   where RollNo = '${req.body.productinfo}' and paymentStatus = 0`;
+		} else {
+			paymentstatusupdatequery = `update InternationalStudants set paymentStatus = 1 , OrderId = ${req.body.txnid}  where SchoolID = '${req.body.productinfo}' and paymentStatus = 0`;
+		}
+
+
 
 		connection.query(paymentstatusupdatequery, function (error, updatedresult) {
 			// console.log("updatedresult", updatedresult);
@@ -555,7 +576,7 @@ const payment = async (req, res, next) => {
 
 	let data = {};
 
-	const { amount, email, phone, name, productinfo } = req.body;
+	const { amount, email, phone, name, productinfo, type } = req.body;
 	let randomval = randomize("0", 5);
 	data['key'] = '63XJAXM4WO';
 	data['txnid'] = `GOTERI2022_${randomval}`
@@ -565,11 +586,11 @@ const payment = async (req, res, next) => {
 	data['phone'] = `${phone}`;
 	data['name'] = `${name}`;
 	data['productinfo'] = `${productinfo}`;
-	// data['furl'] = 'http://localhost:4000/api/responsepage';
-	// data['surl'] = 'http://localhost:4000/api/responsepage';
-	data['furl'] = 'https://terigreenolympiad.com/api/responsepage';
-	data['surl'] = 'https://terigreenolympiad.com/api/responsepage';
-	data['udf1'] = '';
+	data['furl'] = 'http://localhost:4000/api/responsepage';
+	data['surl'] = 'http://localhost:4000/api/responsepage';
+	// data['furl'] = 'https://terigreenolympiad.com/api/responsepage';
+	// data['surl'] = 'https://terigreenolympiad.com/api/responsepage';
+	data['udf1'] = type;
 	data['udf2'] = '';
 	data['udf3'] = '';
 	data['udf4'] = '';
@@ -594,8 +615,8 @@ const payment = async (req, res, next) => {
 		hash_key = generateHash(data);
 		data['hash_key'] = hash_key;
 		console.log("data in form", data);
-		// payment_url = 'https://testpay.easebuzz.in/';  // TESTING
-		payment_url = 'https://pay.easebuzz.in/';
+		payment_url = 'https://testpay.easebuzz.in/';  // TESTING
+		// payment_url = 'https://pay.easebuzz.in/';    // PRODUCTION
 		call_url = payment_url + 'payment/initiateLink';
 		utilPayment.call(call_url, formvalue(data)).then(function (response) {
 			console.log("response", response);
@@ -632,15 +653,17 @@ const pay = (access_key, url_main, res, request_payment_data) => {
 
 const generateHash = (data) => {
 
-	// for testing 
-	var hashstring = '63XJAXM4WO' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
-		"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
-	hashstring += "|" + 'AP6GFPDU0T';
-
-	// for production
+	// for production 
 	// var hashstring = '63XJAXM4WO' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
 	// 	"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
 	// hashstring += "|" + 'AP6GFPDU0T';
+
+
+
+	//  test 
+	var hashstring = '2PBP7IABZ2' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
+		"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
+	hashstring += "|" + 'DAH88E3UWQ';
 
 	console.log("hashstring", hashstring);
 	data.hash = sha512.sha512(hashstring);
@@ -721,26 +744,32 @@ const StudentLogin = async (req, res, next) => {
 							message: "Invalid credentials"
 						});
 					} else {
-						sqlQuery1 = `SELECT RollNo, Name, DOB, Mobile, Email, Gender, Country, Add1, Add2, State, City, Pin, School, Class, Section, PGEmail, PGMobile, ExamTheme, DemoExam, ExamLevel, ExamSlotDateTime, DemoSlotDateTime, PaymentStatus
-						 FROM IndividualStudent WHERE RollNo = "${username}" LIMIT 0, 1;`
-						connectionval.query(sqlQuery1, function (err, studentdetails) {
-							if (err) {
-								console.log('error', err);
-								connectionval.release();
-								return res.json({
-									status: false,
-									message: "Please try again!"
-								});
-							} else {
-								let studentdetailsval = Array.from(studentdetails)[0];
-								connectionval.release();
-								return res.json({
-									status: true,
-									data: studentdetailsval,
-									message: ""
-								});
-							}
-						})
+						connectionval.release();
+						return res.json({
+							status: true,
+							message: "Login success"
+						});
+
+						// sqlQuery1 = `SELECT RollNo, Name, DOB, Mobile, Email, Gender, Country, Add1, State, City, Pin, School, Class, Section,PGName, PGEmail, PGMobile, ExamTheme, DemoExam, ExamLevel,PaymentStatus
+						//  FROM IndividualStudent WHERE RollNo = "${username}" LIMIT 0, 1;`
+						// connectionval.query(sqlQuery1, function (err, studentdetails) {
+						// 	if (err) {
+						// 		console.log('error', err);
+						// 		connectionval.release();
+						// 		return res.json({
+						// 			status: false,
+						// 			message: "Please try again!"
+						// 		});
+						// 	} else {
+						// 		let studentdetailsval = Array.from(studentdetails)[0];
+						// 		connectionval.release();
+						// 		return res.json({
+						// 			status: true,
+						// 			data: studentdetailsval,
+						// 			message: ""
+						// 		});
+						// 	}
+						// })
 					}
 
 				}

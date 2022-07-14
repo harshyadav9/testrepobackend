@@ -50,11 +50,14 @@ router.post('/applicationStatus', User.applicationStatus);
 router.post('/ispaymentallowed', StudantController.ispaymentallowed);
 
 
+router.get('/sendEmailToCandidate', SmsController.sendEmailToCandidate);
+
+
 
 // router.get('/sms', SmsController.sendSmsToCandidate);
 
 router.post('/generateOtp', SmsController.generateOtp);
-router.post('/generateOtpEmail', SmsController.generateOtpEmail);
+
 
 
 // 
