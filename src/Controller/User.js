@@ -693,6 +693,72 @@ const upDateSchool = async (req, res, next) => {
 
 }
 
+
+
+const StudentLogin = async (req, res, next) => {
+	let { username, password } = req.body;
+	connection.getConnection(function (err, connectionval) {
+
+		if (typeof username !== 'undefined' && typeof password !== 'undefined' && username !== "" && password !== "") {
+			let sqlQuery = '';
+			sqlQuery = `SELECT RollNo FROM IndividualStudent WHERE RollNo = "${username}" AND password = "${password}" LIMIT 0, 1;`
+
+			connectionval.query(sqlQuery, function (err, result) {
+				if (err) {
+					console.log('error', err);
+					connectionval.release();
+					return res.json({
+						status: false,
+						message: "Please try again!"
+					});
+				} else {
+
+					let resultval = Array.from(result);
+					if (resultval.length === 0) {
+						connectionval.release();
+						return res.json({
+							status: false,
+							message: "Invalid credentials"
+						});
+					} else {
+						sqlQuery1 = `SELECT RollNo, Name, DOB, Mobile, Email, Gender, Country, Add1, Add2, State, City, Pin, School, Class, Section, PGEmail, PGMobile, ExamTheme, DemoExam, ExamLevel, ExamSlotDateTime, DemoSlotDateTime, PaymentStatus
+						 FROM IndividualStudent WHERE RollNo = "${username}" LIMIT 0, 1;`
+						connectionval.query(sqlQuery1, function (err, studentdetails) {
+							if (err) {
+								console.log('error', err);
+								connectionval.release();
+								return res.json({
+									status: false,
+									message: "Please try again!"
+								});
+							} else {
+								let studentdetailsval = Array.from(studentdetails)[0];
+								connectionval.release();
+								return res.json({
+									status: true,
+									data: studentdetailsval,
+									message: ""
+								});
+							}
+						})
+					}
+
+				}
+
+
+			});
+		} else {
+			// connection.end();
+			connectionval.release();
+			return res.status(400).json({
+				message: "Bad request!",
+				status: true
+			})
+		}
+
+	});
+}
+
 const login = async (req, res, next) => {
 	console.log("login ....");
 	// let conn = await connection.getConnection();
@@ -794,5 +860,6 @@ module.exports = {
 	upDateSchool,
 	payment,
 	responsepage,
-	applicationStatus
+	applicationStatus,
+	StudentLogin
 }

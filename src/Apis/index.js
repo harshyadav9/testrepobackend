@@ -23,6 +23,7 @@ router.post('/get-studant', StudantController.getStudantData);
 // 
 router.post('/user-list', User.getAllUser);
 router.post('/login', User.login);
+router.post('/studentLogin', User.StudentLogin);
 router.post('/new-user', User.register);
 router.post('/update-info', User.upDateSchool);
 
@@ -53,6 +54,7 @@ router.post('/ispaymentallowed', StudantController.ispaymentallowed);
 // router.get('/sms', SmsController.sendSmsToCandidate);
 
 router.post('/generateOtp', SmsController.generateOtp);
+router.post('/generateOtpEmail', SmsController.generateOtpEmail);
 
 
 // 

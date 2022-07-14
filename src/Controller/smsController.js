@@ -34,6 +34,25 @@ UNICGO`;
 };
 
 
+const generateOtpEmail = async (req, res, next) => {
+    let { mobile } = req.body;
+    let randomvalue = randomize("0", 4);
+    sendSmsToCandidate(randomvalue, mobile).then(() => {
+
+        return res.json({
+            status: true,
+            otp: randomvalue
+        });
+    }).catch(error => {
+
+        return res.json({
+            status: true,
+            otp: randomvalue
+        });
+    });
+
+}
+
 const generateOtp = async (req, res, next) => {
     let { mobile } = req.body;
     let randomvalue = randomize("0", 4);
@@ -56,5 +75,6 @@ const generateOtp = async (req, res, next) => {
 
 module.exports = {
     sendSmsToCandidate,
-    generateOtp
+    generateOtp,
+    generateOtpEmail
 }
