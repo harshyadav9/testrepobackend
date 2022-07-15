@@ -559,7 +559,29 @@ const applicationStatus = async (req, res, next) => {
 	FROM InternationalStudants ins
 	JOIN FeeIN f on 
 	f.ExamMode = ins.ExamTheme
-	WHERE SchoolID='${school_code}' AND SubscriberType ='SCHL' order by ins.name`;
+	WHERE SchoolID='${school_code}' AND SubscriberType ='SCHL'`;
+
+	connection.query(sqlQuery, function (error, result) {
+		if (error) {
+			console.log("error", error)
+			return res.status(500).json({ status: false, message: "Please try again!" })
+		}
+		let appStatusRes = Array.from(result);
+		return res.status(200).json({ status: false, message: "application status data", data: appStatusRes });
+	})
+}
+
+
+
+const applicationIndividualStatus = async (req, res, next) => {
+
+	let { roll_no } = req.body;
+	sqlQuery = `SELECT ins.Name,ins.DOB,ins.Class,ins.Section,ins.ExamTheme,ins.DemoExam,f.Fee,ins.ExamSlotDateTime,ins.DemoSlotDateTime,ins.Rollno,ins.PaymentStatus
+	FROM IndividualStudent ins
+	JOIN FeeIN f on 
+	f.ExamMode = ins.ExamTheme
+	WHERE RollNo='${roll_no}' AND SubscriberType ='SCHL'`;
+	console.log("sqlQuery", sqlQuery);
 	connection.query(sqlQuery, function (error, result) {
 		if (error) {
 			console.log("error", error)
@@ -891,5 +913,6 @@ module.exports = {
 	payment,
 	responsepage,
 	applicationStatus,
+	applicationIndividualStatus,
 	StudentLogin
 }
