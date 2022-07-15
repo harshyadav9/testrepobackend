@@ -742,7 +742,7 @@ const StudentLogin = async (req, res, next) => {
 						connectionval.release();
 						return res.json({
 							status: false,
-							message: "Invalid credentials"
+							message: "Either your login id or password is incorrect"
 						});
 					} else {
 						connectionval.release();
