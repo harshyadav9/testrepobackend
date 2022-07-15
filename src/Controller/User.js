@@ -207,8 +207,8 @@ const formvalue = (data) => {
 
 
 
-		'key': '2PBP7IABZ2',   // test
-		// 'key': '63XJAXM4WO',   // production
+		// 'key': '2PBP7IABZ2',   // test
+		'key': '63XJAXM4WO',   // production
 		'txnid': data.txnid,
 		'amount': data.amount,
 		'email': data.email,
@@ -283,18 +283,18 @@ const responsepage = async (req, res, next) => {
 		console.log("response", response)
 
 		//  production
-		// var hashstring = 'AP6GFPDU0T' + "|" + response.status + "|" + response.udf10 + "|" + response.udf9 + "|" + response.udf8 + "|" + response.udf7 +
-		// 	"|" + response.udf6 + "|" + response.udf5 + "|" + response.udf4 + "|" + response.udf3 + "|" + response.udf2 + "|" + response.udf1 + "|" +
-		// 	response.email + "|" + response.firstname + "|" + response.productinfo + "|" + response.amount + "|" + response.txnid + "|" + response.key;
-		// hash_key = sha512.sha512(hashstring);
+		var hashstring = 'AP6GFPDU0T' + "|" + response.status + "|" + response.udf10 + "|" + response.udf9 + "|" + response.udf8 + "|" + response.udf7 +
+			"|" + response.udf6 + "|" + response.udf5 + "|" + response.udf4 + "|" + response.udf3 + "|" + response.udf2 + "|" + response.udf1 + "|" +
+			response.email + "|" + response.firstname + "|" + response.productinfo + "|" + response.amount + "|" + response.txnid + "|" + response.key;
+		hash_key = sha512.sha512(hashstring);
 
 
 		//  test
 
-		var hashstring = 'DAH88E3UWQ' + "|" + response.status + "|" + response.udf10 + "|" + response.udf9 + "|" + response.udf8 + "|" + response.udf7 +
-			"|" + response.udf6 + "|" + response.udf5 + "|" + response.udf4 + "|" + response.udf3 + "|" + response.udf2 + "|" + response.udf1 + "|" +
-			response.email + "|" + response.firstname + "|" + response.productinfo + "|" + response.amount + "|" + response.txnid + "|" + response.key;
-		hash_key = sha512.sha512(hashstring);
+		// var hashstring = 'DAH88E3UWQ' + "|" + response.status + "|" + response.udf10 + "|" + response.udf9 + "|" + response.udf8 + "|" + response.udf7 +
+		// 	"|" + response.udf6 + "|" + response.udf5 + "|" + response.udf4 + "|" + response.udf3 + "|" + response.udf2 + "|" + response.udf1 + "|" +
+		// 	response.email + "|" + response.firstname + "|" + response.productinfo + "|" + response.amount + "|" + response.txnid + "|" + response.key;
+		// hash_key = sha512.sha512(hashstring);
 
 
 
@@ -587,10 +587,10 @@ const payment = async (req, res, next) => {
 	data['phone'] = `${phone}`;
 	data['name'] = `${name}`;
 	data['productinfo'] = `${productinfo}`;
-	data['furl'] = 'http://localhost:4000/api/responsepage';
-	data['surl'] = 'http://localhost:4000/api/responsepage';
-	// data['furl'] = 'https://terigreenolympiad.com/api/responsepage';
-	// data['surl'] = 'https://terigreenolympiad.com/api/responsepage';
+	// data['furl'] = 'http://localhost:4000/api/responsepage';
+	// data['surl'] = 'http://localhost:4000/api/responsepage';
+	data['furl'] = 'https://terigreenolympiad.com/api/responsepage';
+	data['surl'] = 'https://terigreenolympiad.com/api/responsepage';
 	data['udf1'] = type;
 	data['udf2'] = '';
 	data['udf3'] = '';
@@ -616,8 +616,8 @@ const payment = async (req, res, next) => {
 		hash_key = generateHash(data);
 		data['hash_key'] = hash_key;
 		console.log("data in form", data);
-		payment_url = 'https://testpay.easebuzz.in/';  // TESTING
-		// payment_url = 'https://pay.easebuzz.in/';    // PRODUCTION
+		// payment_url = 'https://testpay.easebuzz.in/';  // TESTING
+		payment_url = 'https://pay.easebuzz.in/';    // PRODUCTION
 		call_url = payment_url + 'payment/initiateLink';
 		utilPayment.call(call_url, formvalue(data)).then(function (response) {
 			console.log("response", response);
@@ -655,16 +655,16 @@ const pay = (access_key, url_main, res, request_payment_data) => {
 const generateHash = (data) => {
 
 	// for production 
-	// var hashstring = '63XJAXM4WO' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
-	// 	"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
-	// hashstring += "|" + 'AP6GFPDU0T';
+	var hashstring = '63XJAXM4WO' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
+		"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
+	hashstring += "|" + 'AP6GFPDU0T';
 
 
 
 	//  test 
-	var hashstring = '2PBP7IABZ2' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
-		"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
-	hashstring += "|" + 'DAH88E3UWQ';
+	// var hashstring = '2PBP7IABZ2' + "|" + data.txnid + "|" + data.amount + "|" + data.productinfo + "|" + data.name + "|" + data.email +
+	// 	"|" + data.udf1 + "|" + data.udf2 + "|" + data.udf3 + "|" + data.udf4 + "|" + data.udf5 + "|" + data.udf6 + "|" + data.udf7 + "|" + data.udf8 + "|" + data.udf9 + "|" + data.udf10;
+	// hashstring += "|" + 'DAH88E3UWQ';
 
 	console.log("hashstring", hashstring);
 	data.hash = sha512.sha512(hashstring);
