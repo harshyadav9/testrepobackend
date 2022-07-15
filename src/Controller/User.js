@@ -64,12 +64,13 @@ const register = async (req, res, next) => {
 					if (error) {
 						return res.status(500).json({ status: false, message: "Please try again1" });
 					} else {
-						sendEmail(principalname, email, { schoolCode: uniqueSchoolCode, pass: mobile }).then(data => {
-							return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
-						}).catch(error => {
-							console.log("error", error);
-							return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
-						});
+						return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
+						// sendEmail(principalname, email, { schoolCode: uniqueSchoolCode, pass: mobile }).then(data => {
+						// 	return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
+						// }).catch(error => {
+						// 	console.log("error", error);
+						// 	return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
+						// });
 						// return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
 					}
 				})
