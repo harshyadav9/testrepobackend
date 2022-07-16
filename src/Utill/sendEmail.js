@@ -44,7 +44,7 @@ const sendEmail = async (name, email, school) => {
 
 
 
-const sendEmailotp = async (otp, email) => {
+const sendEmailotp = async (otp, email, email_header) => {
 
     let transporter = nodeMailer.createTransport({
         host: 'smtp.gmail.com',
@@ -59,7 +59,7 @@ const sendEmailotp = async (otp, email) => {
     let mailOptions = {
         from: ` TERI Team " <testmail809809@gmail.com>`, // sender address
         to: `${email}`, // list of receivers
-        subject: "New School user ", // Subject line
+        subject: `${email_header}`, // Subject line
         html: emailHtml.emailOtpHtml(otp) // html body
     };
 
