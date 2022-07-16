@@ -71,7 +71,7 @@ router.post('/upload', FileController.uploadDB, HelpDeskController.createTicket)
 router.post('/get-ticket-by-id', HelpDeskController.getTicketsById);
 
 
-
+router.post('/sendEmail', SmsController.sendEmail);
 
 
 // 

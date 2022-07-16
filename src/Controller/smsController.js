@@ -1,6 +1,6 @@
 var request = require('request');
 var randomize = require('randomatic');
-const { sendEmailotp } = require('../Utill/sendEmail');
+const { sendEmailotp, sendEmailFull } = require('../Utill/sendEmail');
 const sendSmsToCandidate = async (otp, mobile, msg) => {
     console.log("msg", msg);
     // return new Promise((resolve, reject) => {
@@ -51,6 +51,25 @@ const sendEmailToCandidate = async (req, res, next) => {
         });
     });
 };
+
+
+
+const sendEmail = async (req, res, next) => {
+    const { email, roll_no, pass } = req.body;
+    console.log("email, roll_no, pass", email, roll_no, pass);
+    sendEmailFull(email, roll_no, pass).then(data => {
+        return res.json({
+            status: true,
+            message: "success"
+        });
+    }).catch(error => {
+        return res.json({
+            status: true,
+
+        });
+    });
+};
+
 
 
 
@@ -109,5 +128,6 @@ module.exports = {
     sendSmsToCandidate,
     generateOtp,
     sendEmailToCandidate,
-    sendStudentMsg
+    sendStudentMsg,
+    sendEmail
 }
