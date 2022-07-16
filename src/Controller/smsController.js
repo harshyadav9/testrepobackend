@@ -9,7 +9,7 @@ const sendSmsToCandidate = async (otp, mobile, msg) => {
     // UNICGO`;
 
     let obj = {
-        "uname": "20210409", "pass": "sathya@9999", "send": "UNICAD", "dest": mobile,
+        "uname": "20210409", "pass": "20210409", "send": "UNICGO", "dest": mobile,
         "msg": msg
     };
     // console.log("obj" , obj);
@@ -25,7 +25,7 @@ const sendSmsToCandidate = async (otp, mobile, msg) => {
                 console.log("error in sending message", error, resonse);
                 reject(error);
             } else {
-                console.log("options", resonse);
+                console.log("options", body);
                 resolve(body);
             }
         });
@@ -36,9 +36,9 @@ const sendSmsToCandidate = async (otp, mobile, msg) => {
 
 
 const sendEmailToCandidate = async (req, res, next) => {
-    let { email } = req.query;
+    let { email, email_header } = req.query;
     let randomvalue = randomize("0", 4);
-    sendEmailotp(randomvalue, email).then(data => {
+    sendEmailotp(randomvalue, email, email_header).then(data => {
         return res.json({
             status: true,
             otp: randomvalue

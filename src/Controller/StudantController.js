@@ -290,6 +290,8 @@ function calculateFee(data = [], id, srollNumber, totalrows, res) {
 	// body...
 }
 
+
+// not used
 const uploadStudantRecord = async (req, res, next) => {
 
 	try {
@@ -350,7 +352,7 @@ const uploadStudantRecord = async (req, res, next) => {
 
 
 
-
+//  not used
 
 const getStudantData = (req, res, next) => {
 	let sqlQuery = '';
@@ -373,6 +375,8 @@ const getStudantData = (req, res, next) => {
 	})
 }
 
+
+//  not used
 const updatePaymentStatus = (req, res, next) => {
 	let sqlQuery = '';
 	let { SchoolID } = req.body;
@@ -394,6 +398,10 @@ const updatePaymentStatus = (req, res, next) => {
 		}
 	})
 }
+
+
+
+//  not used
 const upadateStudantTableSlots = (req, res, next) => {
 	let sqlQuery = '';
 	let { SchoolID, timing } = req.body;
@@ -465,6 +473,7 @@ const upadateStudantTableSlots = (req, res, next) => {
 }
 
 
+//  not used
 const isSlottingAllowed = (req, res, next) => {
 	console.log("req.body.schoolCode", req.body.schoolCode)
 	var sqlQuery = `SELECT count(*) as count FROM shooolnyt.InternationalStudants where SchoolID='${req.body.schoolCode}' and paymentStatus = 0`;
@@ -502,11 +511,13 @@ const isSlottingAllowed = (req, res, next) => {
 }
 
 
-
+//  not used
 const ispaymentallowed = (req, res, next) => {
 	console.log("req.body.schoolCode", req.body.schoolCode)
 	let { schoolCode } = req.body;
 	var sqlQuery = `SELECT count(*) as count FROM InternationalStudants where SchoolID ='${schoolCode}' and paymentStatus = 0`;
+
+
 	connection.query(sqlQuery, async function (err, result) {
 		if (err) {
 			console.log('Error', err);
