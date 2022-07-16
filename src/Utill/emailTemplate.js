@@ -328,7 +328,7 @@ const emailOtpHtml = (otp) => (`<!DOCTYPE html>
                       <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                         <table border="0" cellspacing="0" cellpadding="0">
                           <tr>
-                              <td align="center" style="border-radius: 36px;" ><b>Your otp for email verification is:</b></td>
+                              <td align="center" style="border-radius: 36px;" ><b>Your OTP for email verification is:</b></td>
                               <td align="center" style="border-radius: 36px;" >${otp}</td>
                               
                           </tr>

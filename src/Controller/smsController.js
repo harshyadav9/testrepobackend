@@ -1,12 +1,12 @@
 var request = require('request');
 var randomize = require('randomatic');
 const { sendEmailotp } = require('../Utill/sendEmail');
-const sendSmsToCandidate = async (otp, mobile) => {
-    console.log("candidate", otp, mobile);
+const sendSmsToCandidate = async (otp, mobile, msg) => {
+    console.log("msg", msg);
     // return new Promise((resolve, reject) => {
     // let msg = "Welcome ! Your ABCON Registration No:ABCON-" + candidate.registrationNumber + " and password:" + candidate.password;
-    let msg = `Dear sir/madam OTP for mobile number verification is ${otp} Thanks TERI DELHI
-UNICGO`;
+    //     let msg = `Dear sir/madam OTP for mobile number verification is ${otp} Thanks TERI DELHI
+    // UNICGO`;
 
     let obj = {
         "uname": "20210409", "pass": "sathya@9999", "send": "UNICAD", "dest": mobile,
@@ -22,10 +22,10 @@ UNICGO`;
         request(options, (error, resonse, body) => {
             // console.log(resonse);
             if (error) {
-                console.log("error in sending message", error);
+                console.log("error in sending message", error, resonse);
                 reject(error);
             } else {
-                console.log("body", body);
+                console.log("options", resonse);
                 resolve(body);
             }
         });
@@ -55,10 +55,38 @@ const sendEmailToCandidate = async (req, res, next) => {
 
 
 
+
+const sendStudentMsg = async (req, res, next) => {
+    // let { mobile } = req.body;
+    let randomvalue = randomize("0", 4);
+    let msg = `Welcome! You have successfully registered with TERI DELHI.Login Id :13 Password: 13 
+Thanks TERI DELHI
+UNICGO`;
+    sendSmsToCandidate(randomvalue, 8920911853, msg).then(() => {
+
+        return res.json({
+            status: true,
+            otp: randomvalue
+        });
+    }).catch(error => {
+        console.log(error);
+        return res.json({
+            status: false,
+            otp: randomvalue
+        });
+    });
+
+}
+
+
+
+
 const generateOtp = async (req, res, next) => {
     let { mobile } = req.body;
     let randomvalue = randomize("0", 4);
-    sendSmsToCandidate(randomvalue, mobile).then(() => {
+    let msg = `Dear sir/madam OTP for mobile number verification is ${randomvalue} Thanks TERI DELHI
+UNICGO`;
+    sendSmsToCandidate(randomvalue, mobile, msg).then(() => {
 
         return res.json({
             status: true,
@@ -80,5 +108,6 @@ const generateOtp = async (req, res, next) => {
 module.exports = {
     sendSmsToCandidate,
     generateOtp,
-    sendEmailToCandidate
+    sendEmailToCandidate,
+    sendStudentMsg
 }

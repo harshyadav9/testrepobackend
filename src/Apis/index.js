@@ -7,6 +7,7 @@ const FileController = require('../Controller/FileController')
 const SlotController = require('../Controller/SlotController')
 const SmsController = require('../Controller/smsController')
 const User = require('../Controller/User')
+const HelpDeskController = require('../Controller/HepDeskController')
 
 
 router.get('/country', Static.getCountry);
@@ -38,6 +39,9 @@ router.post('/get-slot', SlotController.getSlots);
 router.post('/update-slot', SlotController.updateSlot);
 router.post('/responsepage', User.responsepage);
 
+
+router.get('/sendconfirmationToStudent', SmsController.sendStudentMsg);
+
 // router.post('/response', User.response);
 
 router.post('/isSlottingAllowed', StudantController.isSlottingAllowed);
@@ -59,6 +63,14 @@ router.get('/sendEmailToCandidate', SmsController.sendEmailToCandidate);
 // router.get('/sms', SmsController.sendSmsToCandidate);
 
 router.post('/generateOtp', SmsController.generateOtp);
+
+
+router.get('/get-category', HelpDeskController.getCategory);
+router.post('/create-help-ticket', HelpDeskController.createTicket);
+router.post('/upload', FileController.uploadDB, HelpDeskController.createTicket);
+router.post('/get-ticket-by-id', HelpDeskController.getTicketsById);
+
+
 
 
 

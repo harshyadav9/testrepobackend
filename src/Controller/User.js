@@ -580,7 +580,7 @@ const applicationIndividualStatus = async (req, res, next) => {
 	FROM IndividualStudent ins
 	JOIN FeeIN f on 
 	f.ExamMode = ins.ExamTheme
-	WHERE RollNo='${roll_no}' AND SubscriberType ='SCHL'`;
+	WHERE RollNo='${roll_no}' AND SubscriberType ='INDV'`;
 	console.log("sqlQuery", sqlQuery);
 	connection.query(sqlQuery, function (error, result) {
 		if (error) {
@@ -591,6 +591,9 @@ const applicationIndividualStatus = async (req, res, next) => {
 		return res.status(200).json({ status: false, message: "application status data", data: appStatusRes });
 	})
 }
+
+
+
 
 
 
