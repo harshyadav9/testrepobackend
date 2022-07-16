@@ -20,6 +20,11 @@ const isFloat = (amt) => {
 }
 
 
+
+
+
+
+
 const register = async (req, res, next) => {
 	let sqlQuery = ''
 	const {
@@ -60,7 +65,7 @@ const register = async (req, res, next) => {
 			connectionval.query(sqlQuery, function (error, result) {
 				if (error) {
 					connectionval.release();
-					res.status(500).json({ status: false, message: "Please try again!" })
+					res.status(500).json({ status: false, message: "Please try again!" });
 				} else if (Array.from(result).length === 0) {
 					let pass = Utill.generatePassword();
 					sqlQuery = `INSERT INTO Schools (schoolsCode, principalname, schoolname, country, state, pincode, mobile, email, ismobileVerified, isEmailVerified,password) 
@@ -68,6 +73,11 @@ const register = async (req, res, next) => {
 					connectionval.query(sqlQuery, function (error, response) {
 						console.log("error", error)
 						if (error) {
+							if (error.parent.code === 'ER_DUP_ENTRY') {
+								console.log("ER_DUP_ENTRY hai ");
+								connectionval.release();
+								return res.status(500).json({ status: false, message: "please click again on registration button" });
+							}
 							connectionval.release();
 							return res.status(500).json({ status: false, message: "Please try again1" });
 						} else {
