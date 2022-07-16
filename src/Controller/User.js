@@ -73,13 +73,9 @@ const register = async (req, res, next) => {
 					connectionval.query(sqlQuery, function (error, response) {
 						console.log("error", error)
 						if (error) {
-							if (error.parent.code === 'ER_DUP_ENTRY') {
-								console.log("ER_DUP_ENTRY hai ");
-								connectionval.release();
-								return res.status(500).json({ status: false, message: "please click again on registration button" });
-							}
+							console.log("error", error);
 							connectionval.release();
-							return res.status(500).json({ status: false, message: "Please try again1" });
+							return res.status(500).json({ status: false, message: "please click again on registration button again and try to save the information" });
 						} else {
 							connectionval.release();
 							return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
@@ -94,7 +90,7 @@ const register = async (req, res, next) => {
 					})
 				} else {
 					connectionval.release();
-					return res.status(200).json({ status: false, message: "School is already registered" })
+					return res.status(500).json({ status: false, message: "School is already registered" })
 				}
 			})
 		});
@@ -587,11 +583,19 @@ const updatePayments = (req, res) => {
 const applicationStatus = async (req, res, next) => {
 
 	let { school_code } = req.body;
-	sqlQuery = `SELECT ins.Name,ins.DOB,ins.Class,ins.Section,ins.ExamTheme,ins.DemoExam,f.Fee,ins.ExamSlotDateTime,ins.DemoSlotDateTime,ins.Rollno,ins.PaymentStatus
+	sqlQuery = `SELECT ins.Name,ins.DOB,ins.Class,ins.Section,ins.ExamTheme,ins.DemoExam,(IFNULL(f.Fee,0)+IFNULL(mc.Fee,0)) as Fee,ins.ExamSlotDateTime,ins.DemoSlotDateTime,ins.Rollno,ins.PaymentStatus
 	FROM InternationalStudants ins
 	JOIN FeeIN f on 
 	f.ExamMode = ins.ExamTheme
-	WHERE SchoolID='${school_code}' AND SubscriberType ='SCHL'`;
+     AND f.SubscriberType ='SCHL'
+    LEFT JOIN FeeIN mc on 
+	mc.SubscriberType = CASE WHEN ins.DemoExam = 'YES' THEN 'MOCK' ELSE '' END
+	WHERE SchoolID='${school_code}' order by ins.name`;
+
+
+
+
+
 
 
 	connection.getConnection(function (err, connectionval) {
@@ -615,12 +619,20 @@ const applicationStatus = async (req, res, next) => {
 const applicationIndividualStatus = async (req, res, next) => {
 
 	let { roll_no } = req.body;
-	sqlQuery = `SELECT ins.Name,ins.DOB,ins.Class,ins.Section,ins.ExamTheme,ins.DemoExam,f.Fee,ins.ExamSlotDateTime,ins.DemoSlotDateTime,ins.Rollno,ins.PaymentStatus
+	sqlQuery = `SELECT ins.Name,ins.DOB,ins.Class,ins.Section,ins.ExamTheme,ins.DemoExam,(IFNULL(f.Fee,0)+IFNULL(mc.Fee,0)) as Fee,ins.ExamSlotDateTime,ins.DemoSlotDateTime,ins.Rollno,ins.PaymentStatus
 	FROM IndividualStudent ins
 	JOIN FeeIN f on 
 	f.ExamMode = ins.ExamTheme
-	WHERE RollNo='${roll_no}' AND SubscriberType ='INDV'`;
+     AND f.SubscriberType ='INDV'
+    LEFT JOIN FeeIN mc on 
+	mc.SubscriberType = CASE WHEN ins.DemoExam = 'YES' THEN 'MOCK' ELSE '' END
+	WHERE RollNo='${roll_no}' order by ins.name`;
 	console.log("sqlQuery", sqlQuery);
+
+
+
+
+
 
 	connection.getConnection(function (err, connectionval) {
 		connectionval.query(sqlQuery, function (error, result) {
