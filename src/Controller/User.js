@@ -39,46 +39,58 @@ const register = async (req, res, next) => {
 	} = req.body;
 	sqlQuery = `SELECT COUNT(*) AS totalRows FROM Schools where country = '${country}' and state='${state}'`;
 	let totalrows = 0;
-	connection.query(sqlQuery, function (err, data) {
-		if (err) {
-			console.log("erro 00990", err)
-		}
-
-		console.log("sqlQuery", sqlQuery);
 
 
-		totalrows = Array.from(data)[0].totalRows;
-		console.log("totalrows", totalrows);
-		let uniqueSchoolCode = Utill.schoolCodeGen(isLocal, stateCityCode, totalrows, countryCode);
-		sqlQuery = `SELECT * FROM Schools WHERE schoolsCode='${schoolsCode}'`
-		connection.query(sqlQuery, function (error, result) {
-			if (error) {
+	connection.getConnection(function (err, connectionval) {
 
-				res.status(500).json({ status: false, message: "Please try again!" })
-			} else if (Array.from(result).length === 0) {
-				let pass = Utill.generatePassword();
-				sqlQuery = `INSERT INTO Schools (schoolsCode, principalname, schoolname, country, state, pincode, mobile, email, ismobileVerified, isEmailVerified,password) 
-			VALUES ("${uniqueSchoolCode}", "${principalname}", "${schoolname}","${country}", "${state}", "${pincode}", "${mobile}", "${email}", ${ismobileVerified}, ${isEmailVerified},"${mobile}")`
-				connection.query(sqlQuery, function (error, response) {
-					console.log("error", error)
-					if (error) {
-						return res.status(500).json({ status: false, message: "Please try again1" });
-					} else {
-						return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
-						// sendEmail(principalname, email, { schoolCode: uniqueSchoolCode, pass: mobile }).then(data => {
-						// 	return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
-						// }).catch(error => {
-						// 	console.log("error", error);
-						// 	return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
-						// });
-						// return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
-					}
-				})
-			} else {
-				return res.status(200).json({ status: false, message: "School is already registered" })
+		connectionval.query(sqlQuery, function (err, data) {
+			if (err) {
+				console.log("erro 00990", err);
+				connectionval.release();
+				return res.status(500).json({ status: false, message: "There is error in getting total count from Schools" });
 			}
-		})
+
+			console.log("sqlQuery", sqlQuery);
+
+
+			totalrows = Array.from(data)[0].totalRows;
+			console.log("totalrows", totalrows);
+			let uniqueSchoolCode = Utill.schoolCodeGen(isLocal, stateCityCode, totalrows, countryCode);
+			sqlQuery = `SELECT * FROM Schools WHERE schoolsCode='${schoolsCode}'`
+			connectionval.query(sqlQuery, function (error, result) {
+				if (error) {
+					connectionval.release();
+					res.status(500).json({ status: false, message: "Please try again!" })
+				} else if (Array.from(result).length === 0) {
+					let pass = Utill.generatePassword();
+					sqlQuery = `INSERT INTO Schools (schoolsCode, principalname, schoolname, country, state, pincode, mobile, email, ismobileVerified, isEmailVerified,password) 
+				VALUES ("${uniqueSchoolCode}", "${principalname}", "${schoolname}","${country}", "${state}", "${pincode}", "${mobile}", "${email}", ${ismobileVerified}, ${isEmailVerified},"${mobile}")`
+					connectionval.query(sqlQuery, function (error, response) {
+						console.log("error", error)
+						if (error) {
+							connectionval.release();
+							return res.status(500).json({ status: false, message: "Please try again1" });
+						} else {
+							connectionval.release();
+							return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
+							// sendEmail(principalname, email, { schoolCode: uniqueSchoolCode, pass: mobile }).then(data => {
+							// 	return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
+							// }).catch(error => {
+							// 	console.log("error", error);
+							// 	return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
+							// });
+							// return res.status(200).json({ status: false, message: "User added to DB", data: uniqueSchoolCode });
+						}
+					})
+				} else {
+					connectionval.release();
+					return res.status(200).json({ status: false, message: "School is already registered" })
+				}
+			})
+		});
+
 	});
+
 }
 
 
@@ -453,99 +465,109 @@ const updatePayments = (req, res) => {
 	let paymentstatusupdatequery;
 	sqlQuery = `update PaymentDetail set PaymentID = '${req.body.easepayid}',PaymentReceivedStatus = 'success' where OrderId = '${req.body.txnid}'`;
 	// console.log("sqlQuery", sqlQuery);
-	connection.query(sqlQuery, function (error, result) {
-
-		// console.log("result", result);
-		if (error) {
-			console.log("error", error);
-			return res.status(500).json({ status: false, message: "update in payment table not happened!" });
-		}
-
-		if (req.body.udf1 === 'INDV') {
-			paymentstatusupdatequery = `update IndividualStudent set paymentStatus = 1   where RollNo = '${req.body.productinfo}' and paymentStatus = 0`;
-		} else {
-			paymentstatusupdatequery = `update InternationalStudants set paymentStatus = 1 , OrderId = ${req.body.txnid}  where SchoolID = '${req.body.productinfo}' and paymentStatus = 0`;
-		}
 
 
+	connection.getConnection(function (err, connectionval) {
 
-		connection.query(paymentstatusupdatequery, function (error, updatedresult) {
-			// console.log("updatedresult", updatedresult);
+		connectionval.query(sqlQuery, function (error, result) {
+
+			// console.log("result", result);
 			if (error) {
-				console.log("error", error)
-				return res.status(500).json({ status: false, message: "update in student international table not happened!" });
+				console.log("error", error);
+				connectionval.release();
+				return res.status(500).json({ status: false, message: "update in payment table not happened!" });
 			}
 
-			var html = `<html><body>
-		<div style="width:100%;height:40px;background: #f0f2f3;border-bottom: 1px solid #dee1e3;
-		box-shadow: rgb(0 0 0 / 93%) 32px 24px 107px 0px;background-color: rgb(172, 235, 141);font-weight: 500;font-size: 16px;    display: flex;
-		flex-direction: column;    border: 2px solid black;">
-			<p style="font-family: sans-serif;font-weight: bold;text-align: center;margin-bottom: 0;">Payment Response Page</p>
-			</div>
-			<h3 style="text-align:center;font-weight:bold;">Dont click back button. Kindly close the window.Otherwise you may losse data...</h3>
-			<h4 style="text-align:center;">TERI-TEAM</h4>
-			<div style="width: 600px;margin: 55px auto 0;padding: 75px 100px 20px 100px;position: relative;
-			border: 1px solid #e9e9e9;text-align: left;box-shadow: 2px 6px 0px 0px #ccc;border-radius: 5px;box-shadow: rgb(0 0 0 / 93%) 32px 24px 107px 0px;
-			background-color: rgb(172, 235, 141);">
-			<center>
-				<div>
-					<div style="display: flex;"><label><h2>Name:</h2></label></div>
-					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.firstname}</h3></div>
-				</div>
-			</center>
+			if (req.body.udf1 === 'INDV') {
+				paymentstatusupdatequery = `update IndividualStudent set paymentStatus = 1   where RollNo = '${req.body.productinfo}' and paymentStatus = 0`;
+			} else {
+				paymentstatusupdatequery = `update InternationalStudants set paymentStatus = 1 , OrderId = ${req.body.txnid}  where SchoolID = '${req.body.productinfo}' and paymentStatus = 0`;
+			}
 
-			<center>
 
-				<div>
-					<div style="display: flex;"><label><h2>Amount:</h2></label></div>
-					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.amount}</h3></div>
+
+			connectionval.query(paymentstatusupdatequery, function (error, updatedresult) {
+				// console.log("updatedresult", updatedresult);
+				if (error) {
+					console.log("error", error);
+					connectionval.release();
+					return res.status(500).json({ status: false, message: "update in student international table not happened!" });
+				}
+
+				var html = `<html><body>
+			<div style="width:100%;height:40px;background: #f0f2f3;border-bottom: 1px solid #dee1e3;
+			box-shadow: rgb(0 0 0 / 93%) 32px 24px 107px 0px;background-color: rgb(172, 235, 141);font-weight: 500;font-size: 16px;    display: flex;
+			flex-direction: column;    border: 2px solid black;">
+				<p style="font-family: sans-serif;font-weight: bold;text-align: center;margin-bottom: 0;">Payment Response Page</p>
 				</div>
+				<h3 style="text-align:center;font-weight:bold;">Dont click back button. Kindly close the window.Otherwise you may losse data...</h3>
+				<h4 style="text-align:center;">TERI-TEAM</h4>
+				<div style="width: 600px;margin: 55px auto 0;padding: 75px 100px 20px 100px;position: relative;
+				border: 1px solid #e9e9e9;text-align: left;box-shadow: 2px 6px 0px 0px #ccc;border-radius: 5px;box-shadow: rgb(0 0 0 / 93%) 32px 24px 107px 0px;
+				background-color: rgb(172, 235, 141);">
+				<center>
+					<div>
+						<div style="display: flex;"><label><h2>Name:</h2></label></div>
+						<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.firstname}</h3></div>
+					</div>
+				</center>
+	
+				<center>
+	
+					<div>
+						<div style="display: flex;"><label><h2>Amount:</h2></label></div>
+						<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.amount}</h3></div>
+					</div>
+					
+				</center>
+	
+				<center>
+	
+				<div>
+						<div style="display: flex;"><label><h2>Order ID:</h2></label></div>
+						<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.txnid}</h3></div>
+					</div>
+	
+	
+				<div>
+						<div style="display: flex;"><label><h2>Payment ID:</h2></label></div>
+						<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.easepayid}</h3></div>
+					</div>
+	
 				
-			</center>
-
-			<center>
-
-			<div>
-					<div style="display: flex;"><label><h2>Order ID:</h2></label></div>
-					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.txnid}</h3></div>
-				</div>
-
-
-			<div>
-					<div style="display: flex;"><label><h2>Payment ID:</h2></label></div>
-					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.easepayid}</h3></div>
-				</div>
-
+				</center>
+	
+				<center>
+	
+				<div>
+						<div style="display: flex;"><label><h2>Email:</h2></label></div>
+						<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.email}</h3></div>
+					</div>
+	
+	
+				</center>
+	
 			
-			</center>
-
-			<center>
-
-			<div>
-					<div style="display: flex;"><label><h2>Email:</h2></label></div>
-					<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${req.body.email}</h3></div>
-				</div>
-
-
-			</center>
-
-		
+				
+				<center><h1 style="color=green">Your payment is successful.</h1></center>
+				<center><h4>Kindly close this window.</h4></center>
+				<div>
+			</div>
 			
-			<center><h1 style="color=green">Your payment is successful.</h1></center>
-			<center><h4>Kindly close this window.</h4></center>
-			<div>
-		</div>
-		
-		</body></html>`
-			res.writeHead(200, { 'Content-type': 'text/html' });
-			res.write(html);
-			res.end();
+			</body></html>`
+				res.writeHead(200, { 'Content-type': 'text/html' });
+				res.write(html);
+				res.end();
 
-		});
+			});
 
 
 
-	})
+		})
+
+
+	});
+
 }
 
 
@@ -561,14 +583,21 @@ const applicationStatus = async (req, res, next) => {
 	f.ExamMode = ins.ExamTheme
 	WHERE SchoolID='${school_code}' AND SubscriberType ='SCHL'`;
 
-	connection.query(sqlQuery, function (error, result) {
-		if (error) {
-			console.log("error", error)
-			return res.status(500).json({ status: false, message: "Please try again!" })
-		}
-		let appStatusRes = Array.from(result);
-		return res.status(200).json({ status: false, message: "application status data", data: appStatusRes });
-	})
+
+	connection.getConnection(function (err, connectionval) {
+		connectionval.query(sqlQuery, function (error, result) {
+			if (error) {
+				console.log("error", error);
+				connectionval.release();
+				return res.status(500).json({ status: false, message: "Please try again!" })
+			}
+			let appStatusRes = Array.from(result);
+			connectionval.release();
+			return res.status(200).json({ status: false, message: "application status data", data: appStatusRes });
+		})
+
+	});
+
 }
 
 
@@ -582,14 +611,21 @@ const applicationIndividualStatus = async (req, res, next) => {
 	f.ExamMode = ins.ExamTheme
 	WHERE RollNo='${roll_no}' AND SubscriberType ='INDV'`;
 	console.log("sqlQuery", sqlQuery);
-	connection.query(sqlQuery, function (error, result) {
-		if (error) {
-			console.log("error", error)
-			return res.status(500).json({ status: false, message: "Please try again!" })
-		}
-		let appStatusRes = Array.from(result);
-		return res.status(200).json({ status: false, message: "application status data", data: appStatusRes });
-	})
+
+	connection.getConnection(function (err, connectionval) {
+		connectionval.query(sqlQuery, function (error, result) {
+			if (error) {
+				console.log("error", error);
+				connectionval.release();
+				return res.status(500).json({ status: false, message: "Please try again!" })
+			}
+			let appStatusRes = Array.from(result);
+			connectionval.release();
+			return res.status(200).json({ status: false, message: "application status data", data: appStatusRes });
+		})
+
+	});
+
 }
 
 
