@@ -42,7 +42,7 @@ const sendEmail = async (name, email, school) => {
 
 
 
-const sendEmailFull = async (email, roll_no, pass) => {
+const sendEmailFull = async (textheader, email, roll_no, pass) => {
 
     let transporter = nodeMailer.createTransport({
         host: 'smtp.gmail.com',
@@ -58,7 +58,7 @@ const sendEmailFull = async (email, roll_no, pass) => {
         from: ` TERI Team " <testmail809809@gmail.com>`, // sender address
         to: `${email}`, // list of receivers
         subject: `New User`, // Subject line
-        html: emailHtml.emailHtml(roll_no, pass) // html body
+        html: emailHtml.emailHtml(textheader, roll_no, pass) // html body
     };
 
     return new Promise(function (resolve, reject) {

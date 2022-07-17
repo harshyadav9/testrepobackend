@@ -55,9 +55,9 @@ const sendEmailToCandidate = async (req, res, next) => {
 
 
 const sendEmail = async (req, res, next) => {
-    const { email, roll_no, pass } = req.body;
+    const { email, roll_no, pass, textheader } = req.body;
     console.log("email, roll_no, pass", email, roll_no, pass);
-    sendEmailFull(email, roll_no, pass).then(data => {
+    sendEmailFull(textheader, email, roll_no, pass).then(data => {
         return res.json({
             status: true,
             message: "success"
