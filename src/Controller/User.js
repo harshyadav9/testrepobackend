@@ -42,7 +42,12 @@ const register = async (req, res, next) => {
 		stateCityCode,
 		countryCode
 	} = req.body;
-	sqlQuery = `SELECT COUNT(*) AS totalRows FROM Schools where country = '${country}' and state='${state}'`;
+
+
+
+
+	sqlQuery = `SELECT CAST(IFNULL(MAX(RIGHT(SchoolsCode,4)),'0000') AS UNSIGNED) AS totalRows 
+	FROM Schools where country = '${country}' and state='${state}'`;
 	let totalrows = 0;
 
 
