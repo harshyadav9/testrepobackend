@@ -489,14 +489,15 @@ const updatePayments = (req, res) => {
 				return res.status(500).json({ status: false, message: "update in payment table not happened!" });
 			}
 
+			console.log("req.body in update =payment", req.body);
 			if (req.body.udf1 === 'INDV') {
 				paymentstatusupdatequery = `update IndividualStudent set paymentStatus = 1   where RollNo = '${req.body.productinfo}' and paymentStatus = 0`;
 			} else {
-				paymentstatusupdatequery = `update InternationalStudants set paymentStatus = 1 , OrderId = ${req.body.txnid}  where SchoolID = '${req.body.productinfo}' and paymentStatus = 0`;
+				paymentstatusupdatequery = `update InternationalStudants set paymentStatus = 1 , OrderId = '${req.body.txnid}'  where SchoolID = '${req.body.productinfo}' and paymentStatus = 0`;
 			}
 
 
-
+			console.log("paymentstatusupdatequery", paymentstatusupdatequery);
 			connectionval.query(paymentstatusupdatequery, function (error, updatedresult) {
 				// console.log("updatedresult", updatedresult);
 				if (error) {
