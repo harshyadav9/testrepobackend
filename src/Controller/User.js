@@ -966,6 +966,45 @@ const login = async (req, res, next) => {
 
 
 }
+
+
+
+
+const checkStudentStatus = (req, res, next) => {
+	let { school_code } = req.body;
+	connection.getConnection(function (err, connectionval) {
+		if (err) {
+			console.log('query connec error!', err);
+			connectionval.release();
+			return res.json({
+				status: false,
+				message: "There is issue in connection in mysql"
+			});
+		}
+		sqlQuery = `SELECT COUNT(*) AS count FROM InternationalStudants WHERE SchoolID = "${school_code}"`;
+
+		connectionval.query(sqlQuery, function (err, result) {
+			if (err) {
+				console.log('error', err);
+				connectionval.release();
+				return res.json({
+					status: false,
+					message: "Please try again!"
+				})
+			} else {
+				let countstudent = Array.from(result)[0];
+				console.log("let finalresult = Array.from(result)[0];", countstudent);
+				connectionval.release();
+				return res.json({
+					data: countstudent,
+					status: true,
+					message: "count of student uploaded"
+				})
+			}
+		})
+
+	});
+}
 module.exports = {
 	getAllUser,
 	login,
@@ -975,5 +1014,6 @@ module.exports = {
 	responsepage,
 	applicationStatus,
 	applicationIndividualStatus,
-	StudentLogin
+	StudentLogin,
+	checkStudentStatus
 }

@@ -74,6 +74,10 @@ router.post('/get-ticket-by-id', HelpDeskController.getTicketsById);
 router.post('/sendEmail', SmsController.sendEmail);
 
 
+
+router.post('/isStudentUploadMax', User.checkStudentStatus);
+
+
 // 
 router.get('/', (req, res, next) => {
 	res.send("tetsing country ")
