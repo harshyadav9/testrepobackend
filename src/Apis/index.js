@@ -59,7 +59,7 @@ router.post('/ispaymentallowed', StudantController.ispaymentallowed);
 router.get('/sendEmailToCandidate', SmsController.sendEmailToCandidate);
 
 
-
+router.post('/checkpaymentDone', StudantController.checkpaymentDone);
 // router.get('/sms', SmsController.sendSmsToCandidate);
 
 router.post('/generateOtp', SmsController.generateOtp);

@@ -21,28 +21,25 @@ const getpaymentdetails = (req, res, next) => {
 
 		const { school_code } = req.body;
 		console.log("school_code", school_code);
-		sqlQuery = `SELECT * FROM InternationalStudants where SchoolID="${school_code}"`;
+		// SELECT * FROM vwGetSchoolPaymentFeeDetail where SchoolID = 'GOAE010008'
+		// sqlQuery = `SELECT * FROM InternationalStudants where SchoolID="${school_code}"`;
+		sqlQuery = `SELECT * FROM vwGetSchoolPaymentFeeDetail where SchoolID="${school_code}"`;
 		// let totalrows = 0;
 		connectionval.query(sqlQuery, function (err, data) {
 			if (err) {
 				console.log("erro 00990", err);
 				connectionval.release();
-				res.status(500).json({ message: 'please try again ', status: false })
+				return res.status(500).json({ message: 'please try again ', status: false });
 			}
 
 			console.log("data", Array.from(data));
 			// totalrows = Array.from(data)[0].totalRows;
+			connectionval.release();
+			return res.status(200).json({ message: 'successful', status: false, data: data })
+			// let totalData = data;
 
-			let totalData = data;
+			// let clientData = calculateSchoolStudentFee(totalData, school_code, res, connectionval);
 
-
-			// console.log("id>>>>", id);
-			// console.log("srollNumber>>>>", srollNumber);
-			// console.log("srollNumber>>>>", srollNumber);
-			let clientData = calculateSchoolStudentFee(totalData, school_code, res, connectionval);
-			// let idArray = id.split('');
-			// let countryCode = idArray.slice(2).slice(0,2).join('');
-			// let citycode = idArray.slice(4).slice(0,2).join('');
 
 
 		});
@@ -511,11 +508,11 @@ const isSlottingAllowed = (req, res, next) => {
 }
 
 
-//  not used
-const ispaymentallowed = (req, res, next) => {
+const checkpaymentDone = (req, res, next) => {
 	console.log("req.body.schoolCode", req.body.schoolCode)
 	let { schoolCode } = req.body;
-	var sqlQuery = `SELECT count(*) as count FROM InternationalStudants where SchoolID ='${schoolCode}' and paymentStatus = 0`;
+	var sqlQuery = `SELECT count(*) as count FROM InternationalStudants where SchoolID ='${schoolCode}' and paymentStatus = 0 and
+	 IFNULL(ExamSlotDateTime,'') != ''`;
 
 
 	connection.query(sqlQuery, async function (err, result) {
@@ -528,21 +525,58 @@ const ispaymentallowed = (req, res, next) => {
 			})
 
 		} else {
-			console.log("result", Array.from(result)[0]);
+			console.log("result>>>>", Array.from(result)[0]);
 			let count = Array.from(result)[0];
 			if (count.count === 0) {
 				return res.json({
-					data: {},
-					status: false,
-					message: "There are no Students for which payment is due."
+					data: 0,
+					status: true,
+					message: "There are no students whose payment is pending"
 				});
 			} else {
 				return res.json({
-					data: {},
+					data: count,
 					status: true,
 					message: ""
 				});
 			}
+
+		}
+	});
+
+};
+
+
+
+//  not used
+const ispaymentallowed = (req, res, next) => {
+	console.log("req.body.schoolCode", req.body.schoolCode)
+	let { schoolCode } = req.body;
+	// var sqlQuery = `SELECT count(*) as count FROM InternationalStudants where SchoolID ='${schoolCode}' and paymentStatus = 0 and
+	//  IFNULL(ExamSlotDateTime,'') = ''`;
+
+	var sqlQuery = `SELECT * FROM  vwGetSchoolStudentCountForPayment where SchoolID ='${schoolCode}' `;
+
+
+	connection.query(sqlQuery, async function (err, result) {
+		if (err) {
+			console.log('Error', err);
+
+			return res.json({
+				status: false,
+				message: "please try again!"
+			})
+
+		} else {
+			console.log("result>>>>", Array.from(result)[0]);
+			let count = Array.from(result)[0];
+
+			return res.json({
+				data: count,
+				status: false,
+				message: "There are no Students for which payment is due."
+			});
+
 
 		}
 	});
@@ -559,5 +593,6 @@ module.exports = {
 	upadateStudantTableSlots,
 	getpaymentdetails,
 	isSlottingAllowed,
-	ispaymentallowed
+	checkpaymentDone,
+	ispaymentallowed,
 }
