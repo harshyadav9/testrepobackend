@@ -73,8 +73,8 @@ const register = async (req, res, next) => {
 					res.status(500).json({ status: false, message: "Please try again!" });
 				} else if (Array.from(result).length === 0) {
 					let pass = Utill.generatePassword();
-					sqlQuery = `INSERT INTO Schools (schoolsCode, principalname, schoolname, country, state, pincode, mobile, email, ismobileVerified, isEmailVerified,password) 
-				VALUES ("${uniqueSchoolCode}", "${principalname}", "${schoolname}","${country}", "${state}", "${pincode}", "${mobile}", "${email}", ${ismobileVerified}, ${isEmailVerified},"${mobile}")`
+					sqlQuery = `INSERT INTO Schools (schoolsCode, principalname, schoolname, country, state, pincode, mobile, email, ismobileVerified, isEmailVerified,password,Mode) 
+				VALUES ("${uniqueSchoolCode}", "${principalname}", "${schoolname}","${country}", "${state}", "${pincode}", "${mobile}", "${email}", ${ismobileVerified}, ${isEmailVerified},"${mobile}" , "ONLINE")`
 					connectionval.query(sqlQuery, function (error, response) {
 						console.log("error", error)
 						if (error) {
