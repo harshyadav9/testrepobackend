@@ -79,6 +79,14 @@ router.post('/checkRollNo', User.checkRollNo);
 router.post('/isStudentUploadMax', User.checkStudentStatus);
 
 
+router.get('/getHelpDeskCategories', User.getHelpDeskCategories);
+
+
+
+
+// router.get('/getAllStudentRecords', StudantController.getAllStudentRecords);
+
+
 // 
 router.get('/', (req, res, next) => {
 	res.send("tetsing country ")

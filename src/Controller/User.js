@@ -1014,6 +1014,46 @@ const checkRollNo = (req, res, next) => {
 
 
 
+const getHelpDeskCategories = (req, res, next) => {
+	connection.getConnection(function (err, connectionval) {
+		if (err) {
+			console.log('query connec error!', err);
+			connectionval.release();
+			return res.json({
+				status: false,
+				message: "There is issue in connection in mysql"
+			});
+		}
+
+		sqlQuery = `SELECT * FROM shooolnyt.HelpdeskCategory`;
+		connectionval.query(sqlQuery, function (err, result) {
+			if (err) {
+				console.log('error', err);
+				connectionval.release();
+				return res.json({
+					status: false,
+					message: "Please try again!"
+				})
+			} else {
+				let categories = Array.from(result);
+				console.log("categories", categories);
+				connectionval.release();
+				return res.json({
+					data: categories,
+					status: true,
+					message: "categories received"
+				})
+			}
+		})
+
+
+	});
+
+}
+
+
+
+
 const checkStudentStatus = (req, res, next) => {
 	let { school_code } = req.body;
 	connection.getConnection(function (err, connectionval) {
@@ -1060,5 +1100,6 @@ module.exports = {
 	applicationIndividualStatus,
 	StudentLogin,
 	checkStudentStatus,
-	checkRollNo
+	checkRollNo,
+	getHelpDeskCategories
 }
