@@ -74,6 +74,7 @@ router.post('/get-ticket-by-id', HelpDeskController.getTicketsById);
 router.post('/sendEmail', SmsController.sendEmail);
 
 
+router.post('/checkRollNo', User.checkRollNo);
 
 router.post('/isStudentUploadMax', User.checkStudentStatus);
 

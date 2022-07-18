@@ -973,6 +973,44 @@ const login = async (req, res, next) => {
 
 }
 
+const checkRollNo = (req, res, next) => {
+
+	let { school_code } = req.body;
+
+
+	connection.getConnection(function (err, connectionval) {
+		if (err) {
+			console.log('query connec error!', err);
+			connectionval.release();
+			return res.json({
+				status: false,
+				message: "There is issue in connection in mysql"
+			});
+		}
+		sqlQuery = `select count(*) as count from InternationalStudants where SchoolID = '${school_code}' and paymentStatus = 1 and  ifnull(Rollno,'') = '' ;`;
+
+		connectionval.query(sqlQuery, function (err, result) {
+			if (err) {
+				console.log('error', err);
+				connectionval.release();
+				return res.json({
+					status: false,
+					message: "Please try again!"
+				})
+			}
+			let rollNoCount = Array.from(result)[0];
+			connectionval.release();
+			return res.json({
+				data: rollNoCount,
+				status: true,
+				message: "roll no count"
+			})
+		});
+
+	});
+
+}
+
 
 
 
@@ -1021,5 +1059,6 @@ module.exports = {
 	applicationStatus,
 	applicationIndividualStatus,
 	StudentLogin,
-	checkStudentStatus
+	checkStudentStatus,
+	checkRollNo
 }
