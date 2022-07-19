@@ -809,12 +809,12 @@ const upDateSchool = async (req, res, next) => {
 
 
 const StudentLogin = async (req, res, next) => {
-	let { username, password } = req.body;
+	let { username, password, login_type } = req.body;
 	connection.getConnection(function (err, connectionval) {
 
 		if (typeof username !== 'undefined' && typeof password !== 'undefined' && username !== "" && password !== "") {
 			let sqlQuery = '';
-			sqlQuery = `SELECT RollNo FROM IndividualStudent WHERE RollNo = "${username}" AND password = "${password}" LIMIT 0, 1;`
+			sqlQuery = `SELECT RollNo,IndiGO FROM IndividualStudent WHERE RollNo = "${username}" AND password = "${password}" LIMIT 0, 1;`
 
 			connectionval.query(sqlQuery, function (err, result) {
 				if (err) {
@@ -826,7 +826,7 @@ const StudentLogin = async (req, res, next) => {
 					});
 				} else {
 
-					let resultval = Array.from(result);
+					let resultval = Array.from(result)[0];
 					if (resultval.length === 0) {
 						connectionval.release();
 						return res.json({
@@ -834,11 +834,23 @@ const StudentLogin = async (req, res, next) => {
 							message: "Either your login id or password is incorrect"
 						});
 					} else {
+						console.log("DFDSFSFSJKFWAKFJHWQ;OFJQWJFQ", resultval);
+						// if(resultval === 'go4youth')
+						if (resultval.IndiGO !== login_type) {
+							connectionval.release();
+							return res.json({
+								status: false,
+								message: `You are not authorized to login through this page.Please login through ${resultval.IndiGO} page`
+							});
+						}
+
 						connectionval.release();
 						return res.json({
 							status: true,
-							message: "Login success"
+							message: `Login success`
 						});
+
+
 
 						// sqlQuery1 = `SELECT RollNo, Name, DOB, Mobile, Email, Gender, Country, Add1, State, City, Pin, School, Class, Section,PGName, PGEmail, PGMobile, ExamTheme, DemoExam, ExamLevel,PaymentStatus
 						//  FROM IndividualStudent WHERE RollNo = "${username}" LIMIT 0, 1;`
