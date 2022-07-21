@@ -83,14 +83,12 @@ router.get('/getHelpDeskCategories', User.getHelpDeskCategories);
 
 
 
-
+router.post('/forgetPassword', User.forgetPassword);
 // router.get('/getAllStudentRecords', StudantController.getAllStudentRecords);
 
 
 // 
-router.get('/', (req, res, next) => {
-	res.send("tetsing country ")
-})
+
 
 
 

@@ -470,7 +470,7 @@ const responsepage = async (req, res, next) => {
 
 
 
-const updatePayments = (req, res) => {
+const updatePayments = async (req, res) => {
 
 
 	let paymentstatusupdatequery;
@@ -566,10 +566,18 @@ const updatePayments = (req, res) => {
 				<div>
 			</div>
 			
-			</body></html>`
-				res.writeHead(200, { 'Content-type': 'text/html' });
-				res.write(html);
-				res.end();
+			</body></html>`;
+
+				let obj = {
+					firstname: req.body.firstname,
+					amount: req.body.amount,
+					txnId: req.body.txnid,
+					easepayid: req.body.easepayid,
+					email: req.body.email
+				}
+				sendPayMail(res, html, obj);
+
+
 
 			});
 
@@ -583,12 +591,84 @@ const updatePayments = (req, res) => {
 }
 
 
+const sendPayMail = async (res, htmlRes, emailObj) => {
+
+
+	var html = `<html><body>
+	<div style="width:100%;height:40px;background: #f0f2f3;border-bottom: 1px solid #dee1e3;
+	box-shadow: rgb(0 0 0 / 93%) 32px 24px 107px 0px;background-color: rgb(172, 235, 141);font-weight: 500;font-size: 16px;    display: flex;
+	flex-direction: column;    border: 2px solid black;">
+		</div>
+		<h4 style="text-align:center;">TERI-TEAM</h4>
+		<div style="width: 600px;margin: 55px auto 0;padding: 75px 100px 20px 100px;position: relative;
+		border: 1px solid #e9e9e9;text-align: left;box-shadow: 2px 6px 0px 0px #ccc;border-radius: 5px;box-shadow: rgb(0 0 0 / 93%) 32px 24px 107px 0px;
+		background-color: rgb(172, 235, 141);">
+		<center>
+			<div>
+				<div style="display: flex;"><label><h2>Name:</h2></label></div>
+				<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${emailObj.firstname}</h3></div>
+			</div>
+		</center>
+
+		<center>
+
+			<div>
+				<div style="display: flex;"><label><h2>Amount:</h2></label></div>
+				<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${emailObj.amount}</h3></div>
+			</div>
+			
+		</center>
+
+		<center>
+
+		<div>
+				<div style="display: flex;"><label><h2>Order ID:</h2></label></div>
+				<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${emailObj.txnId}</h3></div>
+			</div>
+
+
+		<div>
+				<div style="display: flex;"><label><h2>Payment ID:</h2></label></div>
+				<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${emailObj.easepayid}</h3></div>
+			</div>
+
+		
+		</center>
+
+		<center>
+
+		<div>
+				<div style="display: flex;"><label><h2>Email:</h2></label></div>
+				<div style="flex: 0.5;display: inline-block;width: 80%;font-size: 28px;margin-top: -48px;">${emailObj.email}</h3></div>
+			</div>
+
+
+		</center>
+
+	
+		
+		<center><h1 style="color=green">Your payment is successful.</h1></center>
+		<div>
+	</div>
+	
+	</body></html>`;
+
+
+	let resvalue = await sendEmail.sendPaymentEmail(html, emailObj.email);
+	res.writeHead(200, { 'Content-type': 'text/html' });
+	res.write(htmlRes);
+	res.end();
+}
+
+
 
 
 
 const applicationStatus = async (req, res, next) => {
 
 	let { school_code } = req.body;
+
+
 	sqlQuery = `SELECT ins.Name,ins.StudentID,ins.DOB,ins.Class,ins.Section,ins.ExamTheme,ins.DemoExam,(IFNULL(f.Fee,0)+IFNULL(mc.Fee,0)) as Fee,ins.ExamSlotDateTime,ins.DemoSlotDateTime,ins.Rollno,ins.PaymentStatus
 	FROM InternationalStudants ins
 	JOIN FeeIN f on 
@@ -596,7 +676,7 @@ const applicationStatus = async (req, res, next) => {
      AND f.SubscriberType ='SCHL'
     LEFT JOIN FeeIN mc on 
 	mc.SubscriberType = CASE WHEN ins.DemoExam = 'YES' THEN 'MOCK' ELSE '' END
-	WHERE SchoolID='${school_code}' order by ins.name`;
+	WHERE SchoolID='${school_code}'`;
 
 
 
@@ -632,7 +712,7 @@ const applicationIndividualStatus = async (req, res, next) => {
      AND f.SubscriberType ='INDV'
     LEFT JOIN FeeIN mc on 
 	mc.SubscriberType = CASE WHEN ins.DemoExam = 'YES' THEN 'MOCK' ELSE '' END
-	WHERE RollNo='${roll_no}' order by ins.name`;
+	WHERE RollNo='${roll_no}'`;
 	console.log("sqlQuery", sqlQuery);
 
 
@@ -668,7 +748,10 @@ const payment = async (req, res, next) => {
 
 	const { amount, email, phone, name, productinfo, type } = req.body;
 	let randomval = randomize("0", 5);
-	data['key'] = '63XJAXM4WO';
+
+	// data['key'] = '2PBP7IABZ2';  // test
+	data['key'] = '63XJAXM4WO';  // production
+
 	data['txnid'] = `GOTERI2022_${randomval}`
 	// data['amount'] = `${amount}.0`;
 	data['amount'] = `1.0`;
@@ -705,7 +788,7 @@ const payment = async (req, res, next) => {
 		hash_key = generateHash(data);
 		data['hash_key'] = hash_key;
 		console.log("data in form", data);
-		//payment_url = 'https://testpay.easebuzz.in/';  // TESTING
+		// payment_url = 'https://testpay.easebuzz.in/';  // TESTING
 		payment_url = 'https://pay.easebuzz.in/';    // PRODUCTION
 		call_url = payment_url + 'payment/initiateLink';
 		utilPayment.call(call_url, formvalue(data)).then(function (response) {
@@ -827,6 +910,7 @@ const StudentLogin = async (req, res, next) => {
 				} else {
 
 					let resultval = Array.from(result)[0];
+					console.log("resultval", resultval)
 					if (resultval.length === 0) {
 						connectionval.release();
 						return res.json({
@@ -1067,6 +1151,242 @@ const getHelpDeskCategories = (req, res, next) => {
 
 
 
+
+const forgetPassword = async (req, res, next) => {
+	let { school_code, roll_no } = req.body;
+	let errMsg = '';
+	connection.getConnection(function (err, connectionval) {
+		if (err) {
+			console.log('query connec error!', err);
+			connectionval.release();
+			return res.json({
+				status: false,
+				message: "There is issue in connection in mysql"
+			});
+		}
+		if (school_code) {
+			sqlQuery = `SELECT  password , email  FROM Schools WHERE schoolsCode = "${school_code}"`;
+			errMsg = 'The school code entered is not correct.Please try again';
+
+		} else {
+			sqlQuery = `SELECT  password , Email as email FROM IndividualStudent WHERE RollNo = "${roll_no}"`;
+			errMsg = 'The roll number entered is not correct.Please try again';
+		}
+
+		console.log("sqlQuery", sqlQuery);
+
+		connectionval.query(sqlQuery, function (err, result) {
+			if (err) {
+				console.log('error', err);
+				connectionval.release();
+				return res.json({
+					status: false,
+					message: "Please try again!"
+				})
+			} else {
+				let emailCreds = Array.from(result)[0];
+				console.log("emailCreds", emailCreds);
+
+				if (emailCreds !== undefined) {
+					// connectionval.release();
+					console.log("emailCreds", emailCreds);
+					var html = `<!DOCTYPE html>
+					<html>
+					<head>
+					<title></title>
+					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+					<meta name="viewport" content="width=device-width, initial-scale=1">
+					<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+					<style type="text/css">    
+						/* CLIENT-SPECIFIC STYLES */
+						body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+						table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+						img { -ms-interpolation-mode: bicubic; }
+					
+						/* RESET STYLES */
+						img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+						table { border-collapse: collapse !important; }
+						body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
+					
+						/* iOS BLUE LINKS */
+						a[x-apple-data-detectors] {
+							color: inherit !important;
+							text-decoration: none !important;
+							font-size: inherit !important;
+							font-family: inherit !important;
+							font-weight: inherit !important;
+							line-height: inherit !important;
+						}
+						
+						/* MOBILE STYLES */
+						@media screen and (max-width:600px){
+							h1 {
+								font-size: 32px !important;
+								line-height: 32px !important;
+							}
+						}
+					
+						/* ANDROID CENTER FIX */
+						div[style*="margin: 16px 0;"] { margin: 0 !important; }
+					</style>
+					
+					<style type="text/css">
+					
+					</style>
+					</head>
+					<body style="background-color: #5d11e9; margin: 0 !important; padding: 0 !important;">
+					
+					<!-- HIDDEN PREHEADER TEXT -->
+					
+					
+					<table border="0" cellpadding="0" cellspacing="0" width="100%">
+						<!-- LOGO -->
+						<tr>
+							<td bgcolor="#f4f4f4" align="center">
+								<!--[if (gte mso 9)|(IE)]>
+								<table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+								<tr>
+								<td align="center" valign="top" width="600">
+								<![endif]-->
+								<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" >
+									<tr>
+										<td align="center" valign="top" style="padding: -15px 10px 40px 10px;">
+											<a href="#" target="_blank">
+												<img alt="Logo" src="cid:809Ruby90O" width="250" height="250" style="display: block; width: 169px; max-width: 169px; min-width: 169px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; font-size: 18px;" border="0">
+											</a>
+										</td>
+									</tr>
+								</table>
+								<!--[if (gte mso 9)|(IE)]>
+								</td>
+								</tr>
+								</table>
+								<![endif]-->
+							</td>
+						</tr>
+						<!-- HERO -->
+						<tr>
+							<td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
+								<!--[if (gte mso 9)|(IE)]>
+								<table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+								<tr>
+								<td align="center" valign="top" width="600">
+								<![endif]-->
+								<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" >
+									<tr>
+										<td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
+										  <h1 style="font-size: 28px; font-weight: 400; margin: 0; letter-spacing: 0px;">Welcome to Green Olympiad </h1>
+										</td>
+									</tr>
+								</table>
+								<!--[if (gte mso 9)|(IE)]>
+								</td>
+								</tr>
+								</table>
+								<![endif]-->
+							</td>
+						</tr>
+						<!-- COPY BLOCK -->
+						<tr>
+							<td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
+								<!--[if (gte mso 9)|(IE)]>
+								<table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+								<tr>
+								<td align="center" valign="top" width="600">
+								<![endif]-->
+								<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" >
+								  <!-- COPY -->
+								  
+								  <!-- BULLETPROOF BUTTON -->
+								  <tr>
+									<td bgcolor="#ffffff" align="left">
+									  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+										  <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
+											<table border="0" cellspacing="0" cellpadding="0">
+											  <tr>
+												  <td align="center" style="border-radius: 36px;font-size:20px" >Based upon your request , your new password is ${emailCreds.password}. please use your loginid and new password for login.</td>
+												  
+											  </tr>
+											  
+											</table>
+										  </td>
+										</tr>
+									  </table>
+									</td>
+								  </tr>
+								  <!-- COPY -->
+								 
+								  <!-- COPY -->
+									<tr>
+									  <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 20px 30px; color: #666666; font-family: Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;" >
+										<p style="margin: 0;"></p>
+									  </td>
+									</tr>
+								  <!-- COPY -->
+								 
+								  <!-- COPY -->
+								  <tr>
+									<td bgcolor="#ffffff" align="left" style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;" >
+									  <p style="margin: 0;">Cheers,<br>The Teri Team</p>
+									</td>
+								  </tr>
+								</table>
+								<!--[if (gte mso 9)|(IE)]>
+								</td>
+								</tr>
+								</table>
+								<![endif]-->
+							</td>
+						</tr>
+						<!-- FOOTER -->
+						
+					</table>
+						
+					</body>
+					</html>`;
+
+
+					forgetMail(connectionval, html, emailCreds.email, res);
+
+				} else {
+					connectionval.release();
+					return res.json({
+						data: [],
+						status: false,
+						message: errMsg
+					});
+				}
+
+			}
+		});
+
+	});
+}
+
+
+const forgetMail = async (connectionval, html, email, res) => {
+	let resvalue = await sendEmail.forgetEmail(html, email);
+	console.log("resvalue", resvalue);
+	connectionval.release();
+	if (resvalue === 'successful') {
+
+		return res.json({
+			data: [],
+			status: true,
+			message: "Your password has been sent to your registered emailid successfully"
+		});
+	} else {
+		return res.json({
+			data: [],
+			status: false,
+			message: "There is some issue sending email at registered email id"
+		});
+	}
+
+}
+
+
 const checkStudentStatus = (req, res, next) => {
 	let { school_code } = req.body;
 	connection.getConnection(function (err, connectionval) {
@@ -1114,5 +1434,6 @@ module.exports = {
 	StudentLogin,
 	checkStudentStatus,
 	checkRollNo,
-	getHelpDeskCategories
+	getHelpDeskCategories,
+	forgetPassword
 }
