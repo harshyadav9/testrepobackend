@@ -14,12 +14,100 @@ const sendEmail = async (name, email, school) => {
             user: `testmail809809@gmail.com`,
             pass: `xjdrfizxzqzftqrw`
         }
+        // auth: {
+        //     user: `go@teri.res.in`,
+        //     pass: `0gT!#1156M`
+        // }
     });
     let mailOptions = {
         from: ` TERI Team " <testmail809809@gmail.com>`, // sender address
         to: `${email}`, // list of receivers
         subject: "New School user ", // Subject line
         html: emailHtml(name, email, school) // html body
+    };
+
+    return new Promise(function (resolve, reject) {
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                // return console.log(error);
+                reject(error);
+            }
+            // console.log('Message %s sent: %s', info.messageId, info.response);
+            resolve('successful')
+            // res.render('index');
+        });
+    });
+
+
+
+}
+
+
+
+const forgetEmail = async (html, email) => {
+
+    let transporter = nodeMailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        requireTLS: true,
+        auth: {
+            user: `testmail809809@gmail.com`,
+            pass: `xjdrfizxzqzftqrw`
+        }
+        // auth: {
+        //     user: `go@teri.res.in`,
+        //     pass: `0gT!#1156M`
+        // }
+    });
+    let mailOptions = {
+        from: ` TERI Team " <testmail809809@gmail.com>`, // sender address
+        to: `${email}`, // list of receivers
+        subject: "Forget password", // Subject line
+        html: html // html body
+    };
+
+    return new Promise(function (resolve, reject) {
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                // return console.log(error);
+                reject(error);
+            }
+            // console.log('Message %s sent: %s', info.messageId, info.response);
+            resolve('successful')
+            // res.render('index');
+        });
+    });
+
+
+
+}
+
+
+
+const sendPaymentEmail = async (emailheader, emailId) => {
+
+    let transporter = nodeMailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        requireTLS: true,
+        auth: {
+            user: `testmail809809@gmail.com`,
+            pass: `xjdrfizxzqzftqrw`
+        }
+        // auth: {
+        //     user: `go@teri.res.in`,
+        //     pass: `0gT!#1156M`
+        // }    
+    });
+    let mailOptions = {
+        from: ` TERI Team " <testmail809809@gmail.com>`, // sender address
+        to: `${emailId}`, // list of receivers
+        subject: "Payment receipt", // Subject line
+        html: emailheader // html body
     };
 
     return new Promise(function (resolve, reject) {
@@ -53,9 +141,13 @@ const sendEmailFull = async (textheader, email, roll_no, pass) => {
             user: `testmail809809@gmail.com`,
             pass: `xjdrfizxzqzftqrw`
         }
+        // auth: {
+        //     user: `go@teri.res.in`,
+        //     pass: `0gT!#1156M`
+        // }
     });
     let mailOptions = {
-        from: ` TERI Team " <testmail809809@gmail.com>`, // sender address
+        from: ` TERI Team " <go@teri.res.in>`, // sender address
         to: `${email}`, // list of receivers
         subject: `New User`, // Subject line
         html: emailHtml.emailHtml(textheader, roll_no, pass) // html body
@@ -94,6 +186,10 @@ const sendEmailotp = async (otp, email, email_header) => {
             user: `testmail809809@gmail.com`,
             pass: `xjdrfizxzqzftqrw`
         }
+        // auth: {
+        //     user: `go@teri.res.in`,
+        //     pass: `0gT!#1156M`
+        // }
     });
     let mailOptions = {
         from: ` TERI Team " <testmail809809@gmail.com>`, // sender address
@@ -118,4 +214,4 @@ const sendEmailotp = async (otp, email, email_header) => {
 
 
 }
-module.exports = { sendEmail, sendEmailotp, sendEmailFull };
+module.exports = { sendEmail, sendEmailotp, sendEmailFull, sendPaymentEmail, forgetEmail };
