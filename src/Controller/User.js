@@ -589,7 +589,7 @@ const updatePayments = (req, res) => {
 const applicationStatus = async (req, res, next) => {
 
 	let { school_code } = req.body;
-	sqlQuery = `SELECT ins.Name,ins.DOB,ins.Class,ins.Section,ins.ExamTheme,ins.DemoExam,(IFNULL(f.Fee,0)+IFNULL(mc.Fee,0)) as Fee,ins.ExamSlotDateTime,ins.DemoSlotDateTime,ins.Rollno,ins.PaymentStatus
+	sqlQuery = `SELECT ins.Name,ins.StudentID,ins.DOB,ins.Class,ins.Section,ins.ExamTheme,ins.DemoExam,(IFNULL(f.Fee,0)+IFNULL(mc.Fee,0)) as Fee,ins.ExamSlotDateTime,ins.DemoSlotDateTime,ins.Rollno,ins.PaymentStatus
 	FROM InternationalStudants ins
 	JOIN FeeIN f on 
 	f.ExamMode = ins.ExamTheme
@@ -705,7 +705,7 @@ const payment = async (req, res, next) => {
 		hash_key = generateHash(data);
 		data['hash_key'] = hash_key;
 		console.log("data in form", data);
-		// payment_url = 'https://testpay.easebuzz.in/';  // TESTING
+		//payment_url = 'https://testpay.easebuzz.in/';  // TESTING
 		payment_url = 'https://pay.easebuzz.in/';    // PRODUCTION
 		call_url = payment_url + 'payment/initiateLink';
 		utilPayment.call(call_url, formvalue(data)).then(function (response) {
@@ -902,6 +902,7 @@ const login = async (req, res, next) => {
 		let sqlQuery = '';
 		sqlQuery = `SELECT COUNT(schoolname) AS count FROM Schools WHERE schoolsCode = "${username}" AND password = "${password}" LIMIT 0, 1;`
 
+		console.log("sqlQuery", sqlQuery)
 		connection.getConnection(function (err, connectionval) {
 			if (err) {
 				console.log('query connec error!', err);
