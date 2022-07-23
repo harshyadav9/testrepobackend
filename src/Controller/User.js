@@ -1096,7 +1096,7 @@ const payment = async (req, res, next) => {
 
 	data['txnid'] = `GOTERI2022_${randomval}`
 	// data['amount'] = `${amount}.0`;
-	data['amount'] = `1.0`;
+	data['amount'] = `${amount}.0`;
 	data['email'] = `${email}`;
 	data['phone'] = `${phone}`;
 	data['name'] = `${name}`;
