@@ -174,7 +174,6 @@ const sendEmailFull = async (textheader, email, roll_no, pass) => {
 
 
 
-
 const sendEmailotp = async (otp, email, email_header) => {
 
     let transporter = nodeMailer.createTransport({

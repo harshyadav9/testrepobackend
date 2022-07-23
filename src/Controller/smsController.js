@@ -20,7 +20,7 @@ const sendSmsToCandidate = async (otp, mobile, msg) => {
     };
     return new Promise(function (resolve, reject) {
         request(options, (error, resonse, body) => {
-            // console.log(resonse);
+            console.log(body);
             if (error) {
                 console.log("error in sending message", error, resonse);
                 reject(error);
@@ -78,7 +78,7 @@ const sendEmail = async (req, res, next) => {
 const sendStudentMsg = async (req, res, next) => {
     // let { mobile } = req.body;
     let randomvalue = randomize("0", 4);
-    let msg = `Welcome! You have successfully registered with TERI DELHI.Login Id :13 Password: 13 
+    let msg = `Welcome! You have successfully registered with TERI DELHI.Login Id :13 Password:13 
 Thanks TERI DELHI
 UNICGO`;
     sendSmsToCandidate(randomvalue, 8920911853, msg).then(() => {
